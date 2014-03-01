@@ -1,8 +1,13 @@
+//Daniel Fitzgerald
+
 #import "prog5.h"
 #include <iostream>
 
 #import "ListNode.h"
-#include <iostream>
+
+#include "Node.h"
+
+/*
 using namespace std;
 
 template<class data_t> ListNode<data_t>::ListNode(data_t DATA, ListNode<data_t>* NEXTPTR):
@@ -17,8 +22,10 @@ template<class data_t> ListNode<data_t>::ListNode():
 {}
 
 //instantiate this class on the type int
-template class ListNode<int>;
 
+//template class ListNode<float>;
+template class ListNode<Node*>;
+template class ListNode<int>;
 /*
 //destructor
 template<class data_t> ListNode<data_t>::~ListNode(){

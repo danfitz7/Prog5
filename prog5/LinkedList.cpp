@@ -1,11 +1,16 @@
+//Daniel Fitzgerald
+
 #import "prog5.h"
 #include <iostream>
 
 #include "LinkedList.h"
 #include "ListNode.h"
 
+#include "Node.h"
+
 using namespace std;
 
+/*
 template<class data_t> LinkedList<data_t>::LinkedList():
 	headNodePtr(NULL)
 {}
@@ -36,11 +41,11 @@ template<class data_t> void LinkedList<data_t>::push(data_t data){
 //pop an item off the from of the list
 template<class data_t> data_t LinkedList<data_t>::pop(){
 	if (headNodePtr){								//if the list is not empty
-		data_t oldHeadData = headNodePtr->data;//keep track of the data of the old head node that we will return
-		ListNode<data_t>* oldHeadPtr = headNodePtr;			//keep track of the current head node that we are popping off
+		data_t oldHeadData = headNodePtr->data;		//keep track of the data of the old head node that we will return
+		ListNode<data_t>* oldHeadPtr = headNodePtr;	//keep track of the current head node that we are popping off
 		headNodePtr=oldHeadPtr->nextPtr;			//off with the old head, in with it's child
 		//delete(oldHeadPtr);						//delete the old head
-		return oldHeadData;						//return the old head's data
+		return oldHeadData;							//return the old head's data
 	}else{											//if the list is empty, return none
 		cout<<"ERROR: Popping from empty list!"<<endl;
 		return NULL;
@@ -55,8 +60,6 @@ template<class data_t> void LinkedList<data_t>::insert(data_t newData){
 	while (*curNodeFromPtrPtr){						//while the current node exists
 		//if the current node exists, check if the new node should be before it
 		if (newData < (*curNodeFromPtrPtr)->data){
-		//if (*newData < *((*curNodeFromPtrPtr)->dataPtr)){
-//			cout<<"\tInserting "<<newData->time<<" before " <<(*curNodeFromPtrPtr)->dataPtr->time<<"."<<endl;
 			break;
 		}
 		curNodePtr = (*curNodeFromPtrPtr)->nextPtr;				//update the current node to the next of the current node
@@ -67,9 +70,9 @@ template<class data_t> void LinkedList<data_t>::insert(data_t newData){
 	*curNodeFromPtrPtr = new ListNode<data_t>(newData, curNodePtr);
 }
 
-/*
+//static test function to test linked list functionality
 template<class data_t> void LinkedList<data_t>::testLinkedLists(){
-	LinkedList<int> testQ = LinkedList<int>();
+	LinkedList<data_t> testQ = LinkedList<data_t>();
 	
 	testQ.push(0);
 	testQ.push(1);
@@ -84,18 +87,17 @@ template<class data_t> void LinkedList<data_t>::testLinkedLists(){
 	
 	for (size_t i=0;i<=5;i++){
 		cout<<testQ.pop()<<endl;
-		//testQ.pop()->print();
 	}
 	
 	cout<<"new list"<<endl;
 	testQ.print();
 	
 	cout<<"Inserting ints..."<<endl;
-	testQ.insert(1);
+	testQ.insert(1.5);
 	testQ.print();
 	testQ.insert(1);
 	testQ.print();
-	testQ.insert(3);
+	testQ.insert(3.2);
 	testQ.print();
 	testQ.insert(4);
 	testQ.print();
@@ -110,7 +112,11 @@ template<class data_t> void LinkedList<data_t>::testLinkedLists(){
 	cout<<"Inserted ints."<<endl;
 	testQ.print();
 }
-*/
+
 
 //instantiate this class for type int
+
+//template class LinkedList<float>;
+template class LinkedList<Node*>;
 template class LinkedList<int>;
+*/

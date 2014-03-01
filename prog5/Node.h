@@ -35,4 +35,7 @@ public:
 	bool update(int time, int *packetID, int *S1average, int *S2average); //updates Node with time
 };
 
+//overload so we can cout packets
+ostream& operator<<(ostream& os, const Node& node);
+
 #endif

@@ -59,3 +59,8 @@ bool Node::update(int time, int *packetID, int *S1average, int *S2average) //upd
 	else return false;*/
 	} return false;
 } //end update function
+
+//overload the steam out operator so we can cout<<Node
+ostream& operator<<(ostream& os, const Node& node){
+	os<<"Node "<<ID<<endl;
+}

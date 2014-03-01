@@ -1,6 +1,7 @@
 /*
 CS 2302 Progam 5
 Daniel Fitzgerald
+A Simulation of MANET Source Routing in C++ 
 */
 
 //debug flag and global vars
@@ -17,18 +18,16 @@ Daniel Fitzgerald
 #include "LinkedList.h"
 //#include "Node.h"
 //#include "Packet.h"
-//#include "Grid.h"
-
 using namespace std;
 
 //global variables
-extern int simTime;
+int simTime =0;
 
 //function prototypes
-void testLinkedLists();
+void testAll();
 
 /*
-MAIN
+Event-Driven simulation of MANET nodes
 */
 int main(int argc, char* argv[]){
 	if(DEBUG){cout<<endl<<"PROG5\nProcessing "<<argc<<" inputs..."<<endl;}
@@ -39,50 +38,15 @@ int main(int argc, char* argv[]){
 		return 0;
 	}
 
-	testLinkedLists();
+	
+	cout<<"Starting simulation at time " << simTime<<"."<<endl;
+	
+	testAll();
 	
 }
 
 
-void testLinkedLists(){
-	LinkedList<int> testQ = LinkedList<int>();
-	
-	testQ.push(0);
-	testQ.push(1);
-	testQ.push(3);
-	testQ.push(4);
-	testQ.push(2);
-	testQ.push(5);
-	
-	cout<<"Pushed ints."<<endl;
-	testQ.print();
-	cout<<"Popping..."<<endl;
-	
-	for (size_t i=0;i<=5;i++){
-		cout<<testQ.pop()<<endl;
-		//testQ.pop()->print();
-	}
-	
-	cout<<"new list"<<endl;
-	testQ.print();
-	
-	cout<<"Inserting ints..."<<endl;
-	testQ.insert(1);
-	testQ.print();
-	testQ.insert(1);
-	testQ.print();
-	testQ.insert(3);
-	testQ.print();
-	testQ.insert(4);
-	testQ.print();
-	testQ.insert(4);
-	testQ.print();
-	testQ.insert(2);
-	testQ.print();
-	testQ.insert(5);
-	testQ.print();
-	testQ.insert(0);
-	
-	cout<<"Inserted ints."<<endl;
-	testQ.print();
+//test all functionality of base components
+void testAll(){
+	LinkedList<float>::testLinkedLists();
 }

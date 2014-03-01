@@ -31,7 +31,7 @@ void Grid::addSender(Node*)
 	}
 }
 
-void Grid::addMules()
+void Grid::addMule()
 {
 	int i, count = sources + 1;
 	for (i = 0; i < mules; i++)
@@ -48,7 +48,7 @@ void Grid::addMules()
 	}
 }
 
-void Grid::addReceivers()
+void Grid::addReceiver()
 {
 	int i, count = sources + mules + 1;
 	for (i = 0; i < receivers; i++)
@@ -64,7 +64,8 @@ void Grid::addReceivers()
 	}
 }
 
-void Grid::moveNodes()
+/*
+void Grid::moveNode()
 {
 	int i;
 	for (i = sources - 1; i < sources + mules - 1; i++)
@@ -104,6 +105,7 @@ void Grid::moveNodes()
 		}
 	}
 }
+*/
 
 void Grid::print()
 {

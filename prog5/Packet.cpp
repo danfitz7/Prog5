@@ -7,14 +7,16 @@
 using namespace std;
 
 //packet constructor
-Packet::Packet(Node* newSenderPtr, int newID, int time):
+Packet::Packet(LinkedList<Node*> ROUT, int newID, int time):
 	size(1),  //size always 1
 	ID(newID),
-	sender(newSenderPtr),
+	rout(ROUT),
 	sentTime(time)
 {}
 
-int Packet::addPacket(Packet *newPacket) //adds Packet to packetList (returns length of queue)
+/*
+//adds Packet to packetList (returns length of queue)
+int Packet::addPacket(Packet *newPacket) 
 {
 	if (nextPacket) return nextPacket->addPacket(newPacket) + 1; //if packet has no packets behind it
 	else //if packet is last in line
@@ -23,8 +25,15 @@ int Packet::addPacket(Packet *newPacket) //adds Packet to packetList (returns le
 		return 1; //used to calculate length of queue
 	} //end else statement
 } //end addPacket function
+*/
 
-int Packet::print(int time) //prints out node final info
+ostream& operator<<(ostream& os, const Packet& packet){
+	os<< "Packet " << ID << endl;
+	os<<"\tsent time: "<< sentTime<<endl;
+}
+
+//prints out node final info
+int Packet::print(int time) 
 {
 	cout << "Packet " << ID << " final info:" << endl;
 	cout << "  Sender: " << "S" << sender << endl;

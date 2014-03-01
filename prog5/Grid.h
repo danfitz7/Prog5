@@ -10,16 +10,13 @@ using namespace std;
 
 class Grid {
 private:
-	int height;
-	int width;
 	int size;
 	Node** field;
 public:
-	Grid(int newSieze);
+	Grid(int newSize);
 	void addSender(Node*);
 	void addMule(Node*);
 	void addReceiver(Node*);
-	void moveNodes();
 	void print();
 };
 
