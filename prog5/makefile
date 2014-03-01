@@ -1,9 +1,9 @@
 #Packet.o Grid.o Node.o
-prog5: prog5.o Position.o Node.o Packet.o MuleNode.o SourceNode.o ListNode.h LinkedList.h 
-	g++ -o prog5 prog5.o Position.o Node.o Packet.o MuleNode.o SourceNode.o -I.
+prog5: prog5.o Position.o Node.o Packet.o MuleNode.o SourceNode.o Grid.o ListNode.h LinkedList.h 
+	g++ -o prog5 prog5.o Position.o Node.o Packet.o MuleNode.o SourceNode.o Grid.o -I.
 
 #Node.h Packet.h Grid.h prog5.h	
-prog5.o: prog5.cpp ListNode.h LinkedList.h Node.h MuleNode.h SourceNode.o Packet.h prog5.h Position.h
+prog5.o: prog5.cpp ListNode.h LinkedList.h Node.h MuleNode.h SourceNode.o Grid.h Packet.h prog5.h Position.h
 	g++ -Wall -c prog5.cpp -I.
 
 #ListNode.o:	ListNode.cpp ListNode.h prog5.h

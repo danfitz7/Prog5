@@ -18,18 +18,14 @@ void Grid::setSize(int newSize)
 	field = new Node*[size * (size + 2)];
 }
 
-void Grid::setElement(Position p, Node* element)
+void Grid::setElement(int row, int col, Node* element)
 {
-	int row=p.getY();
-	int col=p.getX();
 	int pos = (row * (size + 2)) + col;
 	field[pos] = element;
 }
 
-Node* Grid::getElement(Position p)
+Node* Grid::getElement(int row, int col)
 {
-	int row=p.getY();
-	int col=p.getX();
 	int pos = (row * (size + 2)) + col;
 	return field[pos];
 }

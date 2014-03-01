@@ -12,34 +12,36 @@ class Node {
 	friend ostream& operator<<(ostream& os, const Node* node);	//make the stream printing function a friend so it has access to private vars
 private:
 	int ID;
+	int internalTime;
 	Position pos;
 	LinkedList<Packet*>* packetQueues; 	//Array of queues of packets to rout to their destinations (three queues in this array: small medium and large)
 	
 	int tranTime;
 	int propTime;
+		
+	int longestQueueLength; //longest ever length of Node's queue
 	
-	unsigned int currentLength;
-	unsigned int longestQueueLength; //longest ever length of Node's queue
 	
-	void placeRandomly(unsigned int minCol, unsigned int maxCol);		//place this node randomly on the field in a column such that minCol<=col<maxCol
-
 public:
 	Node(unsigned int newID); //constructor
 	
-	char getType(){return 'N';}	//gets the type of the node
-	
+	Position getPos() { return pos; }
 	int getID() { return ID; }
 	
 	int getPropTime() { return propTime; } //returns propTime
 	int getTranTime() { return tranTime; } //returns tranTime
-		
+	
+	void placeRandomly(unsigned int minCol, unsigned int maxCol);		//place this node randomly on the field in a column such that minCol<=col<maxCol
+	
+	//get/set position	
 	Position getPosition() { return pos; }
+	//void setposition(Position p) { pos=p; }	//we don;t want to ever set a Node's position, because we should always make sure the field reflects the node's new position. 
 	
 	int getLongestQueueLength() { return longestQueueLength; } //returns max Node length
 		
 	void receivePacket(Packet* newPacket);	
 		
-	bool update(); //updates Node with time
+	bool update(int time, int *packetID); //updates Node with time
 };
 
 //overload so we can cout<< nodes

@@ -2,55 +2,40 @@
 
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
-#include <iostream>
+
 #include "ListNode.h"
 
 //forward declare friended functions
 //template<data_t> ostream& operator<< <data_t>(ostream& os, const LinkedList<data_t>& LL);
-	
 
-	
-
+//helper overriden stream insertion operator to print every item in a linked list
+template<typename data_t> ostream& operator<<(ostream& os, const LinkedList<data_t>& LL){
+	os<<"LL {"<<endl;
+	ListNode<data_t>* curNodePtr=LL.headNodePtr;
+	while(curNodePtr){
+		//os<<*curNodePtr<<", ";
+		os<<curNodePtr->data<<", ";
+		curNodePtr=curNodePtr->nextPtr;
+	}
+	os<<"}";
+	return os;
+}
 
 //LINKED LISTS can act as queues or sorted queues
 template<class data_t> class LinkedList{
+	friend ostream& operator<< <data_t>(ostream& os, const LinkedList<data_t>& LL);
 	
-	//helper overridden stream insertion operator to print every item in a linked list
-	friend ostream& operator<<(ostream& os, const LinkedList<data_t>& LL){
-		os<<"LL {";
-		ListNode<data_t>* curNodePtr=LL.headNodePtr;
-		while(curNodePtr){
-			//os<<(*curNodePtr)<<", ";
-			os<<(curNodePtr->getData())<<", ";
-			curNodePtr=curNodePtr->getNextPtr();
-		}
-		os<<"}";
-		return os;
-	}
-
 	private:
 		ListNode<data_t>* headNodePtr;
 		//listNode<data_t>* tailNodePtr;
 		unsigned int curLength;	//length of the queue right now
 		unsigned int longestLength; //record the max length of the queue so far
-		
 	public:
 		LinkedList():
 			headNodePtr(NULL),
 			curLength(0),
 			longestLength(0)
 		{}
-		
-		bool isNotEmpty(){return headNodePtr;}
-		
-		/*
-		//copy a linked list (NOT DEEP COPY)
-		LinkedList(const LinkedList<data_t>& other):
-			headNodePtr(other.headNodePtr),
-			curLength(other.curLength),
-			longestLength(other.longestLength)
-		{}
-		*/
 		
 		//template<class data_t>
 		~LinkedList(){
@@ -61,19 +46,16 @@ template<class data_t> class LinkedList{
 			return longestLength;
 		}
 		
-		
 		//prints a list in order
 		void print(){
-			cout<<"LL: {";
+			cout<<"data_t LIST: "<<endl;
 			ListNode<data_t>* curNodePtr=headNodePtr;
 			while(curNodePtr){
-				cout<<(curNodePtr->data)<<", ";
+				cout<<"NODE: "<<curNodePtr->data<<endl;
 				//curNodePtr->dataPtr->print();
 				curNodePtr=curNodePtr->nextPtr;
 			}
-			cout<<"}"<<endl;
 		}
-		
 		
 		//push an item to the end of the list (FIFO/FCFS Queue)
 		void push(data_t data){
@@ -97,6 +79,11 @@ template<class data_t> class LinkedList{
 				cout<<"ERROR: Popping from empty list!"<<endl;
 				return NULL;
 			}
+		}
+		
+		data_t firstElement()
+		{
+			return headNodePtr->data;
 		}
 		
 		//insert an item in the list in order

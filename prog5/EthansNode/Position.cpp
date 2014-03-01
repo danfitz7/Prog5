@@ -10,14 +10,18 @@ Position::Position():
 	y(-1)
 {}
 
+void Position::setXY(int newX, int newY)
+{
+	x = newX;
+	y = newY;
+}
 
+/*
 Position::Position(int X, int Y):
 	x(X),
 	y(Y)
 {}
 
-//euclidean distance to the given position
-//TODO: should this be an int?
 double Position::distanceFrom(Position other){
 	int xdiff=x-other.x;
 	int ydiff=y=other.y;
@@ -26,7 +30,6 @@ double Position::distanceFrom(Position other){
 	return sqrt(xdiff+ydiff);
 }
 
-//gets the immediately neighbouring position in the given direction
 Position Position::neighborOn(Direction d){
 	int neighborX=x;
 	int neighborY=y;
@@ -48,4 +51,4 @@ Position Position::neighborOn(Direction d){
 	}
 	return Position(neighborX, neighborY);
 }
-
+*/

@@ -28,11 +28,10 @@ public:
 	Packet(unsigned int newID, SIZE size, int arrival_time, LinkedList<Node*> routQueue);
 	Packet(LinkedList<Node*> rout, int newID, int time); //constructor
 	int getID() { return ID; } 							//returns ID
-	LinkedList<Node*> getRout() { return routQueue; } 	//returns routQueue
-	int getSize();										//returns the size of the packet
+	Node* popRout() { return routQueue.pop(); } //pops the next node* off the rout queue and returns it
+	SIZE getSize(){return size;}						//returns the size of the packet
 	int getSentTime() { return sentTime; } 				//returns arrivalTime
 	int getReceivedTime() { return receivedTime; } 		//returns arrivalTime
-	int print(int time); 								//prints packet info
 };
 
 

@@ -15,8 +15,16 @@ class SourceNode: public Node {
 		LinkedList<Node*> SR;	//the Source Routing List of each packet this source node will send
 	public:
 		char getType(){return 'S';}
-		SourceNode(unsigned int sourceID, unsigned int arrival_time, unsigned int nPackets, SIZE pkt_size, LinkedList<Node*>  packetRoutingQueue);
+		SourceNode(unsigned int sourceID, unsigned int arrival_time, unsigned int nPackets, SIZE pkt_size);
 		//void sendNextPacket();
+		
+		void pushSR(Node* nodePtr){
+			SR.push(nodePtr);
+		}
+		
+		LinkedList<Node*> getSR(){
+			return SR;
+		}
 };
 
 #endif

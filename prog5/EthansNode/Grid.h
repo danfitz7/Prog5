@@ -5,7 +5,7 @@
 #define GRID_H
 
 #include "Node.h"
-#include "Position.h"
+
 using namespace std;
 
 class Grid {
@@ -16,8 +16,8 @@ public:
 	Grid();
 	void setSize(int newSize);
 	int getSize() { return size; }
-	void setElement(Position p, Node* element);	//get's the "occupant" of the given grid cell
-	Node* getElement(Position p);
+	void setElement(int row, int col, Node* element);
+	Node* getElement(int row, int col);
 	void print();
 };
 

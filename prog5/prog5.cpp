@@ -107,44 +107,41 @@ int main(int argc, char* argv[]){
 		pktSize=(SIZE)(iPkt_size-1);//the given sizes are 1 based. convert to 0 based so they can be converted to our SIZE enum and used as array indeces for priority queue arrays
 		ss>>SR_size;		//get the number of nodes on it's routing list
 		
-		LinkedList<Node*> packetRoutingQueue=LinkedList<Node*>();	//Source routing Queue of each packet
+		//LinkedList<Node*> packetRoutingQueue=LinkedList<Node*>();	//Source routing Queue of each packet
 		
 		if(DEBUG) cout<<"\tSource Node ID "<<sourceID+1<<" arrived at time "<<arrival_time<<" and has "<<nPackets<<" packets if size "<<pktSize<<" to send through a rout of "<<SR_size<<" nodes."<<endl;
 				
 		//loop through nodeIDs of the routing list of each packet
 		if(DEBUG) cout<<"\tParsing Routing Nodes of Packet: ";
-		Node** routingNodesArray= new Node*[SR_size];
+		unsigned int routingNodeIndexArray[SR_size];//= new unsigned int[SR_size];
 		for (unsigned int routNode=0; routNode<SR_size;routNode++){
 			ss>>nodeID;
 			if(DEBUG)cout<<nodeID<<" ";
-			routingNodesArray[routNode]=(getPtrOfNode(nodeID-1));
+			routingNodeIndexArray[routNode]=nodeID-1;
 		}
 		if(DEBUG) cout<<endl;
 		
-		//push in reverse order
-		cout<<"\tPushing in reverse order...";
+		//init each source node
+		if(DEBUG)cout<<"\tMaking Source Node "<<sourceID+1<<"..."<<endl;
+		sourceNodePtrs[sourceID]=new SourceNode(sourceID, arrival_time, nPackets, pktSize);	//note this uses the sourceID provided by the command line, NOT the one we're looping through. We trust the testing data
+
+		//push the routing nodes in reverse order
+//		cout<<"\tPushing in reverse order: ";
 		for (int routNode=SR_size-1; routNode>=0;routNode--){
-			cout<<(routingNodesArray[routNode])<<", ";
-			packetRoutingQueue.push(routingNodesArray[routNode]);
+//			cout<<(routingNodeIndexArray[routNode]+1)<<", ";
+			sourceNodePtrs[sourceID]->pushSR(getPtrOfNode(routingNodeIndexArray[routNode]));
 		}
 		cout<<endl;
 		
 		//cout<<"\tFinal routing Queue is: ";
 		//packetRoutingQueue.print();
 		
-		cout<<"\tRouting queue is "<<packetRoutingQueue<<endl;
-		
-		//init each source node
-		if(DEBUG)cout<<"\tMaking Source Node "<<sourceID+1<<"..."<<endl;
-		sourceNodePtrs[sourceID]=new SourceNode(sourceID, arrival_time, nPackets, pktSize, packetRoutingQueue);	//note this uses the sourceID provided by the command line, NOT the one we're looping through. We trust the testing data
-
-		if(DEBUG)cout<<"\tNew source made: "<<*sourceNodePtrs[sourceID]<<endl;
-		
-		//TODO
-		//field.placeSenderNode(*sourceNodePtrs[sourceID]);
+		if(DEBUG)cout<<"\tNew source made: "<<(*sourceNodePtrs[sourceID])<<endl;
 	}
 	
 	cout<<"Starting simulation at time " << simTime<<"."<<endl;
+	
+	//TODO: run the simulation here - should be similar to lab5
 	
 	//testAll();
 	cout<<"Done."<<endl;

@@ -7,12 +7,12 @@
 #include "Position.h"
 
 
-SourceNode::SourceNode(unsigned int newID, unsigned int arrival_time, unsigned int N_PACKETS, SIZE pkt_size, LinkedList<Node*>  packetRoutingQueue):
+SourceNode::SourceNode(unsigned int newID, unsigned int arrival_time, unsigned int N_PACKETS, SIZE pkt_size)://, LinkedList<Node*>  packetRoutingQueue
 	Node(newID),	//call constructor from superclass Node
 	arrivalTime(arrival_time),
 	nPackets(N_PACKETS),
 	pktSize(pkt_size),
-	SR(packetRoutingQueue)
+	SR()
 {
 //TODO: init position so it's in a random unoccupied field space
 

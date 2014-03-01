@@ -7,29 +7,25 @@
 #include <iostream>
 using namespace std;
 
-//foreward declare LinkedList so we can use it as a friend class
-//#include "LinkedList.h" //apparently this doesn't work
+//forward declare LinkedList so we can use it as a friend class
+//#include "LinkedList.h" //apparently this doesn't work - glitch
 template<class data_t> class LinkedList;
 
 //fundamental class for linked lists which function as Queues
 template<class data_t> class ListNode{
 	friend class LinkedList<data_t>;
-	
-	//template<class data_t> friend ostream& operator<<(ostream& os, const LinkedList<data_t>& LL);
-	
-	//friend our printing helper function
+		
+	//friend string stream insertion printing helper function to print nodes
 	friend ostream& operator<<(ostream& os, const ListNode<data_t>& lstNode){
 		os<<lstNode.data;
 		return os;
 	}
 	
+	//friend string stream insertion printing helper function to print node pointers
 	friend ostream& operator<<(ostream& os, const ListNode<data_t>* lstNodePtr){
 		os<<(*lstNodePtr);
 		return os;
 	}
-	
-	//friend ostream& operator<< <data_t>(ostream& os, const ListNode<data_t>& lstNode);	//friend our printing helper function
-	//friend ostream& operator<< <data_t>(ostream& os, const LinkedList<data_t>& LL);	//give the LinkedList printer funciton access to a node's private vars
 	
 	private:
 		data_t data;
@@ -48,8 +44,8 @@ template<class data_t> class ListNode{
 			nextPtr(NULL)
 		{}		
 
-		ListNode* getNextPtr(){return nextPtr;}
-		data_t getData(){return data;}
+		ListNode* getNextPtr(){return nextPtr;}			//get a pointer to the next node in the list
+		data_t getData(){return data;}					//get this node's data
 		
 		~ListNode(){delete(nextPtr);};					//destructor prototype
 };
