@@ -6,6 +6,23 @@
 
 using namespace std;
 
+ostream& operator<<(ostream& os, const SIZE& size){
+	switch(size){
+		case SMALL:
+			os<<"SMALL";
+			break;
+		case MEDIUM:
+			os<<"MEDIUM";
+			break;
+		case LARGE:
+			os<<"LARGE";
+			break;
+		default:
+			os<<"ERROR: bad size: "<<(int)size;
+	}
+	return os;
+}
+
 Packet::Packet(unsigned int newID, SIZE size, int arrival_time, LinkedList<Node*> ROUTQ):
 	ID(newID),
 	size(size),
@@ -35,13 +52,18 @@ int Packet::addPacket(Packet *newPacket)
 } //end addPacket function
 */
 
-/*
+//overload the stream output operator so we can easily print packets.
 ostream& operator<<(ostream& os, const Packet& packet){
 	os<< "Packet " << packet.ID << endl;
 	os<<"\tsent time: "<< packet.sentTime<<endl;
 	return os;
 }
-*/
+
+//overload the stream output operator so we can easily print packets pointers.
+ostream& operator<<(ostream& os, const Packet* const packetPtr){
+	os << "PktPtr: {"<<*packetPtr<<"}";
+	return os;
+}
 
 int Packet::getSize(){
 	return size;

@@ -36,7 +36,7 @@ template<class data_t> ListNode<data_t>::ListNode():
 //template class ListNode<float>;
 template class ListNode<Node*>;
 template class ListNode<int>;
-/*
+
 //destructor
 template<class data_t> ListNode<data_t>::~ListNode(){
 	//delete(word);

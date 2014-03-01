@@ -62,16 +62,15 @@ bool Node::update(int time, int *packetID, int *S1average, int *S2average){ //up
 	return true;
 } //end update function
 
-/*
 //overload the steam out operator so we can cout<<Node
-ostream& operator<<(ostream& os, Node node){
-	os<<"Node "<<node.ID<<endl;
+ostream& operator<<(ostream& os, const Node& node){
+	os<<"Node "<<node.ID;
 	return os;
 }
 
-//overload the steam out operator so we can cout<<Node
-ostream& operator<<(ostream& os, Node* nodePtr){
-	os<<"Node "<<nodePtr->ID<<endl;
+//overload the steam out operator so we can cout<<Node*
+ostream& operator<<(ostream& os, const Node* nodePtr){
+	os<<"NodePtr "<<(nodePtr->ID+1);	//add one to the ID to make it 1-based again as it was in the input data
 	return os;
 }
-*/
+

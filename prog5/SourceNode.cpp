@@ -18,10 +18,9 @@ SourceNode::SourceNode(unsigned int newID, unsigned int arrival_time, unsigned i
 
 }
 
-/*
-//for printing
+
+//for printing source nodes
 ostream& operator<<(ostream& os, const SourceNode& srcNode){
-	os<<"SOURCE NODE: ID="<<srcNode.ID<<" arrival= "<<srcNode.arrivalTime<<" nPackets="<<srcNode.nPackets<<" pksSize="<<srcNode.pktSize<<" SR={"<<srcNode.SR<<"}";
+	os<<"SOURCE NODE: "<<(Node)srcNode<<" arrival= "<<srcNode.arrivalTime<<" nPackets="<<srcNode.nPackets<<" pksSize="<<srcNode.pktSize;//<<" SR={"<<srcNode.SR<<"}"
 	return os;	
 }
-*/

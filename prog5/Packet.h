@@ -13,9 +13,11 @@ class Node;//#include "Node.h"
 
 //size of a packet. NOTE: the testing data gives this as {1,2,3}, but it is immediately converted to {0,1,2}
 enum SIZE {SMALL=0, MEDIUM=1, LARGE=2};
+ostream& operator<<(ostream& os, const SIZE& size);
 
 class Packet {
-	//friend ostream& operator<<(ostream& os, const Packet& packet);
+	friend ostream& operator<<(ostream& os, const Packet& packet);
+	friend ostream& operator<<(ostream& os, const Packet* const packet);
 private:
 	unsigned int ID; 				//ID of packet
 	SIZE size; 						//size of packet

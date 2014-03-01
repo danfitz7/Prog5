@@ -7,7 +7,7 @@
 #include "Position.h"
 
 class SourceNode: public Node {
-	//friend ostream& operator<<(ostream& os, const SourceNode& packet);	//frind our printing helper function
+	friend ostream& operator<<(ostream& os, const SourceNode& srcNode);	//friend our printing helper function
 	private:
 		unsigned int arrivalTime;//time this sender node starts sending packets
 		unsigned int nPackets;	//the number of packets this sender will send through the entire simulation
