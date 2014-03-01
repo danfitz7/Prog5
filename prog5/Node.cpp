@@ -3,47 +3,32 @@
 
 #include <iostream>
 #include "Packet.h"
+#include "Position.h"
 #include "Node.h"
 
 using namespace std;
 
 //constructor
 Node::Node(unsigned int  newID):
-	ID(newID),
-	packetQueues(new LinkedList<Packet*>[3]),	//small, medium, and large packet queues
-	sender(true),
-	receiver(false),
-	row(0),
-	col(0),
-	direction(0)
+	ID(newID),									//unique ID of this node (NOTE: this *should* correspond to it's index in the master Node* array)
+	pos(Position()),								//position of his node on the field
+	packetQueues(new LinkedList<Packet*>[3])	//small, medium, and large packet queues in an array of queues
 {}
-	
 
-//constructor
-Node::Node(int newID, bool isSender, bool isReceiver, int newRow, int newCol, int newDirection):
-	ID(newID),
-	packetQueues(new LinkedList<Packet*>[3]),	//small, medium, and large packet queues
-	sender(isSender),
-	receiver(isReceiver),
-	row(newRow),
-	col(newCol),
-	direction(newDirection)
-{}
-	
+//add this packet to one of our queues
 void Node::receivePacket(Packet* newPacket){
 	packetQueues[newPacket->getSize()].insert(newPacket);
+	longestQueueLength++;
 }	
-/*	
-void Node::addPacket(Packet *newPacket) //adds Packet to Node
-{
-	int lengthOfNode = 1; //used to determine length of Node
-	if (sPacket) lengthOfNode = sPacket->addPacket(newPacket) + 1; //if Node contains a packet, adds Packet to the packet list
-	else sPacket = newPacket; //if Node is empty
-	if (lengthOfNode > maxNode) maxNode = lengthOfNode; //updates maxNode length
-} //end addPacket function
-*/
-bool Node::update(int time, int *packetID, int *S1average, int *S2average) //updates Node, returns if Node is empty
-{
+
+//places this node in a random unoccupied position on the global field such that the column, col, of this node's position is minCol<=col<maxCol
+void placeRandomly(unsigned int minCol, unsigned int maxCol){
+	//TODO: fill this in
+}
+
+bool Node::update(int time, int *packetID, int *S1average, int *S2average){ //updates Node, returns if Node is empty
+	//TODO: Update logic here
+	
 	//if (sPacket) //is Node is not empty
 	//{
 		/*if (propTime > 0) propTime--; //decreases propTime
@@ -74,9 +59,11 @@ bool Node::update(int time, int *packetID, int *S1average, int *S2average) //upd
 	}
 	else return false;*/
 	//} return false;
+	return true;
 } //end update function
 
 //overload the steam out operator so we can cout<<Node
-ostream& operator<<(ostream& os, const Node& node){
-	os<<"Node "<</*node.getID()<<*/endl;
+ostream& operator<<(ostream& os, Node node){
+	os<<"Node "<<node.getID()<<endl;
+	return os;
 }

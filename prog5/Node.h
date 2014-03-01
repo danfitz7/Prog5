@@ -5,53 +5,42 @@
 #define NODE_H
 
 #include "Packet.h"
+#include "Position.h"
 
 class Node {
+	friend ostream& operator<<(ostream& os, const Node& node);	//make the stream printing function a friend so it has access to private vars
+
 private:
 	int ID;
-	int internalTime;
-	
+	Position pos;
 	LinkedList<Packet*>* packetQueues; 	//Array of queues of packets to rout to their destinations (three queues in this array: small medium and large)
 	
 	int tranTime;
 	int propTime;
+		
+	int longestQueueLength; //longest ever length of Node's queue
 	
-	bool sender; //if Node is a sender (ie S1 or S2)
-	bool receiver; //if Node is a sender (ie S1 or S2)
-	
-	int row; //row position of Node
-	int col; //col position of Node
-	int direction; //0 = North, 1 = East, 2 = South, 3 = West
-	
-	int maxNode; //longest ever length of Node
+	void placeRandomly(unsigned int minCol, unsigned int maxCol);		//place this node randomly on the field in a column such that minCol<=col<maxCol
 public:
 	Node(unsigned int newID); //constructor
-	Node(int newID, bool isSender, bool isReceiver, int newRow, int newCol, int newDirection); //constructor
-	
-	void receivePacket(Packet*);
-	
-	int getPropTime() { return propTime; } //returns propTime
-	int getTranTime() { return tranTime; } //returns tranTime
 	
 	int getID() { return ID; }
 	
-	int getRow() { return row; }
-	void setRow(int newRow) { row = newRow; }
+	int getPropTime() { return propTime; } //returns propTime
+	int getTranTime() { return tranTime; } //returns tranTime
+		
+	//get/set position	
+	Position getPosition() { return pos; }
+	//void setposition(Position p) { pos=p; }	//we don;t want to ever set a Node's position, because we should always make sure the field reflects the node's new position. 
 	
-	int getCol() { return col; }
-	void setCol(int newCol) { col = newCol; }
-	
-	int getDirection() { return direction; }
-	void setDirection(int newDirection) { direction = newDirection; }
-	
-	int getNodeSize() { return maxNode; } //returns max Node length
-	
-	//void addPacket(Packet *newPacket); //adds packet to Node
-	
+	int getLongestQueueLength() { return longestQueueLength; } //returns max Node length
+		
+	void receivePacket(Packet* newPacket);	
+		
 	bool update(int time, int *packetID, int *S1average, int *S2average); //updates Node with time
 };
 
-//overload so we can cout packets
+//overload so we can cout<< nodes
 ostream& operator<<(ostream& os, const Node& node);
 
 #endif

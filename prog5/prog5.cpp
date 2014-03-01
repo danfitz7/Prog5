@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
 	unsigned int nMules		=atoi(argv[3]); 	//the number of lines should be the second argument
 	unsigned int gridSize	=atoi(argv[4]); 	//the number of lines should be the second argument
 	
-	cout<<"Using "<<nSources<<" source nodes, "<<nReceivers<<" receiver nodes, and "<<nMules<<" mule nodes. Grid size is "<<gridSize<<"."<<endl;
+	if(DEBUG) cout<<"Using "<<nSources<<" source nodes, "<<nReceivers<<" receiver nodes, and "<<nMules<<" mule nodes. Grid size is "<<gridSize<<"."<<endl;
 	
 	//init the nodes
 	Node** sourceNodePtrs 	= new Node*[nSources];
@@ -116,5 +116,5 @@ int main(int argc, char* argv[]){
 
 //test all functionality of base components
 void testAll(){
-	LinkedList<float>::testLinkedLists();
+	//LinkedList<int>::testLinkedLists();
 }

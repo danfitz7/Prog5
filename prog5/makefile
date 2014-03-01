@@ -1,9 +1,9 @@
 #Packet.o Grid.o Node.o
-prog5: prog5.o LinkedList.o ListNode.o Node.o
-	g++ -o prog5 prog5.o LinkedList.o ListNode.o Node.o -I.
+prog5: prog5.o Position.o LinkedList.o ListNode.o Node.o Packet.o MuleNode.o
+	g++ -o prog5 prog5.o Position.o LinkedList.o ListNode.o Node.o Packet.o MuleNode.o -I.
 
 #Node.h Packet.h Grid.h prog5.h	
-prog5.o: prog5.cpp ListNode.h LinkedList.h Node.h prog5.h
+prog5.o: prog5.cpp ListNode.h LinkedList.h Node.h MuleNode.h Packet.h prog5.h Position.h
 	g++ -Wall -c prog5.cpp -I.
 
 #ListNode.o:	ListNode.cpp ListNode.h prog5.h
@@ -15,11 +15,17 @@ prog5.o: prog5.cpp ListNode.h LinkedList.h Node.h prog5.h
 Packet.o: Packet.cpp Packet.h LinkedList.h Node.h prog5.h
 	g++ -Wall -c Packet.cpp -I.
 	
+Position.o:	Position.cpp Position.h prog5.h
+	g++ -Wall -c Position.cpp -I.
+	
 #Grid.o: Grid.cpp Grid.h	prog5.h Node.h
 #	g++ -Wall -c Grid.cpp -I.	
 
-Node.o: Node.cpp Node.h Packet.h prog5.h
+Node.o: Node.cpp Node.h Packet.h Position.h prog5.h
 	g++ -Wall -c Node.cpp -I.	
+	
+MuleNode.o: MuleNode.cpp MuleNode.h Node.h Position.h prog5.h
+	g++ -Wall -c MuleNode.cpp -I.	
 	
 clean:
 	rm *.o

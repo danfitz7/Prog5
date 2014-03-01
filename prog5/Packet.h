@@ -15,6 +15,7 @@ class Node;//#include "Node.h"
 enum SIZE {SMALL=0, MEDIUM=1, LARGE=2};
 
 class Packet {
+	friend ostream& operator<<(ostream& os, const Packet& packet);
 private:
 	unsigned int ID; 				//ID of packet
 	SIZE size; 						//size of packet

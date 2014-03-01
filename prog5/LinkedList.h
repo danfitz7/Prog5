@@ -9,15 +9,22 @@ template<class data_t> class LinkedList{
 	private:
 		ListNode<data_t>* headNodePtr;
 		//listNode<data_t>* tailNodePtr;
-	
+		unsigned int curLength;	//length of the queue right now
+		unsigned int longestLength; //record the max length of the queue so far
 	public:
 		LinkedList():
-			headNodePtr(NULL)
+			headNodePtr(NULL),
+			curLength(0),
+			longestLength(0)
 		{}
 		
 		//template<class data_t>
 		~LinkedList(){
 			delete(headNodePtr);
+		}
+		
+		int getLongestLength(){
+			return longestLength;
 		}
 		
 		//prints a list in order
@@ -34,6 +41,10 @@ template<class data_t> class LinkedList{
 		//push an item to the end of the list (FIFO/FCFS Queue)
 		void push(data_t data){
 			headNodePtr = new ListNode<data_t>(data, headNodePtr);	//make a new node and have it point to the old head	and use the new node as the new head
+			curLength++;
+			if (curLength>longestLength){
+				longestLength=curLength;
+			}
 		}
 		
 		//pop an item off the from of the list
@@ -43,6 +54,7 @@ template<class data_t> class LinkedList{
 				ListNode<data_t>* oldHeadPtr = headNodePtr;	//keep track of the current head node that we are popping off
 				headNodePtr=oldHeadPtr->nextPtr;			//off with the old head, in with it's child
 				//delete(oldHeadPtr);						//delete the old head
+				curLength--;
 				return oldHeadData;							//return the old head's data
 			}else{											//if the list is empty, return none
 				cout<<"ERROR: Popping from empty list!"<<endl;
@@ -66,6 +78,11 @@ template<class data_t> class LinkedList{
 			
 			//insert the new node between the previous and next
 			*curNodeFromPtrPtr = new ListNode<data_t>(newData, curNodePtr);
+			
+			curLength++;
+			if (curLength>longestLength){
+				longestLength=curLength;
+			}
 		}
 		
 		//static test function to test linked list functionality
