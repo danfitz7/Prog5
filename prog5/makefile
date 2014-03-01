@@ -1,9 +1,9 @@
 #Packet.o Grid.o Node.o
-prog5: prog5.o LinkedList.o ListNode.o 
-	g++ -o prog5 prog5.o LinkedList.o ListNode.o -I.
+prog5: prog5.o LinkedList.o ListNode.o Node.o
+	g++ -o prog5 prog5.o LinkedList.o ListNode.o Node.o -I.
 
 #Node.h Packet.h Grid.h prog5.h	
-prog5.o: prog5.cpp ListNode.h LinkedList.h prog5.h
+prog5.o: prog5.cpp ListNode.h LinkedList.h Node.h prog5.h
 	g++ -Wall -c prog5.cpp -I.
 
 #ListNode.o:	ListNode.cpp ListNode.h prog5.h

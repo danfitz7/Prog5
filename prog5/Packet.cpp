@@ -6,9 +6,17 @@
 
 using namespace std;
 
+Packet::Packet(unsigned int newID, SIZE size, int arrival_time, LinkedList<Node*> routQueue):
+	ID(newID),
+	size(SIZE),
+	routQueue(ROUTQ),
+	sentTime(sentTime),
+	receivedTime(0)
+{}
+
 //packet constructor
 Packet::Packet(LinkedList<Node*> ROUT, int newID, int time):
-	size(1),  //size always 1
+	size(SMALL),  //size always 1
 	ID(newID),
 	rout(ROUT),
 	sentTime(time)
@@ -30,6 +38,10 @@ int Packet::addPacket(Packet *newPacket)
 ostream& operator<<(ostream& os, const Packet& packet){
 	os<< "Packet " << ID << endl;
 	os<<"\tsent time: "<< sentTime<<endl;
+}
+
+int Packet::getSize(){
+	return size;
 }
 
 //prints out node final info

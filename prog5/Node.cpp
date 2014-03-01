@@ -8,9 +8,21 @@
 using namespace std;
 
 //constructor
-Node::Node(int newID, bool isSender, bool isReceiver, int newRow, int newCol, int newDirection):
-	sPacket(NULL),
+Node::Node(unsigned int  newID):
 	ID(newID),
+	packetQueues(new LinkedList<Packet*>[3]),	//small, medium, and large packet queues
+	sender(true),
+	receiver(false),
+	row(0),
+	col(0),
+	direction(0)
+{}
+	
+
+//constructor
+Node::Node(int newID, bool isSender, bool isReceiver, int newRow, int newCol, int newDirection):
+	ID(newID),
+	packetQueues(new LinkedList<Packet*>[3]),	//small, medium, and large packet queues
 	sender(isSender),
 	receiver(isReceiver),
 	row(newRow),
@@ -18,6 +30,10 @@ Node::Node(int newID, bool isSender, bool isReceiver, int newRow, int newCol, in
 	direction(newDirection)
 {}
 	
+void Node::receivePacket(Packet* newPacket){
+	packetQueues[newPacket->getSize()].insert(newPacket);
+}	
+/*	
 void Node::addPacket(Packet *newPacket) //adds Packet to Node
 {
 	int lengthOfNode = 1; //used to determine length of Node
@@ -25,11 +41,11 @@ void Node::addPacket(Packet *newPacket) //adds Packet to Node
 	else sPacket = newPacket; //if Node is empty
 	if (lengthOfNode > maxNode) maxNode = lengthOfNode; //updates maxNode length
 } //end addPacket function
-
+*/
 bool Node::update(int time, int *packetID, int *S1average, int *S2average) //updates Node, returns if Node is empty
 {
-	if (sPacket) //is Node is not empty
-	{
+	//if (sPacket) //is Node is not empty
+	//{
 		/*if (propTime > 0) propTime--; //decreases propTime
 		else if (tranTime > 0) tranTime--; //decreases tranTime
 		else //if both propTime and tranTime are complete
@@ -57,10 +73,10 @@ bool Node::update(int time, int *packetID, int *S1average, int *S2average) //upd
 		return true;
 	}
 	else return false;*/
-	} return false;
+	//} return false;
 } //end update function
 
 //overload the steam out operator so we can cout<<Node
 ostream& operator<<(ostream& os, const Node& node){
-	os<<"Node "<<ID<<endl;
+	os<<"Node "<</*node.getID()<<*/endl;
 }

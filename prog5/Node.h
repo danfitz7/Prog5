@@ -10,28 +10,44 @@ class Node {
 private:
 	int ID;
 	int internalTime;
-	Packet *sPacket; //first packet in Node
+	
+	LinkedList<Packet*>* packetQueues; 	//Array of queues of packets to rout to their destinations (three queues in this array: small medium and large)
+	
 	int tranTime;
 	int propTime;
+	
 	bool sender; //if Node is a sender (ie S1 or S2)
 	bool receiver; //if Node is a sender (ie S1 or S2)
+	
 	int row; //row position of Node
 	int col; //col position of Node
 	int direction; //0 = North, 1 = East, 2 = South, 3 = West
+	
 	int maxNode; //longest ever length of Node
 public:
+	Node(unsigned int newID); //constructor
 	Node(int newID, bool isSender, bool isReceiver, int newRow, int newCol, int newDirection); //constructor
+	
+	void receivePacket(Packet*);
+	
 	int getPropTime() { return propTime; } //returns propTime
 	int getTranTime() { return tranTime; } //returns tranTime
+	
 	int getID() { return ID; }
+	
 	int getRow() { return row; }
 	void setRow(int newRow) { row = newRow; }
+	
 	int getCol() { return col; }
 	void setCol(int newCol) { col = newCol; }
+	
 	int getDirection() { return direction; }
 	void setDirection(int newDirection) { direction = newDirection; }
+	
 	int getNodeSize() { return maxNode; } //returns max Node length
-	void addPacket(Packet *newPacket); //adds packet to Node
+	
+	//void addPacket(Packet *newPacket); //adds packet to Node
+	
 	bool update(int time, int *packetID, int *S1average, int *S2average); //updates Node with time
 };
 
