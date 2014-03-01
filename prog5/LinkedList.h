@@ -5,7 +5,14 @@
 
 #include "ListNode.h"
 
+//forward declare friended functions
+//template<data_t> ostream& operator<< <data_t>(ostream& os, const LinkedList<data_t>& LL);
+
+
+
 template<class data_t> class LinkedList{
+	//friend ostream& operator<< <data_t>(ostream& os, const LinkedList<data_t>& LL);
+	
 	private:
 		ListNode<data_t>* headNodePtr;
 		//listNode<data_t>* tailNodePtr;

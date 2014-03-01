@@ -8,8 +8,8 @@
 #include "Position.h"
 
 class Node {
-	friend ostream& operator<<(ostream& os, const Node& node);	//make the stream printing function a friend so it has access to private vars
-
+	//friend ostream& operator<<(ostream& os, const Node& node);	//make the stream printing function a friend so it has access to private vars
+	//friend ostream& operator<<(ostream& os, const Node* node);	//make the stream printing function a friend so it has access to private vars
 private:
 	int ID;
 	Position pos;
@@ -41,6 +41,6 @@ public:
 };
 
 //overload so we can cout<< nodes
-ostream& operator<<(ostream& os, const Node& node);
+//ostream& operator<<(ostream& os, const Node& node);
 
 #endif

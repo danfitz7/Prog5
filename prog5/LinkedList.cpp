@@ -6,10 +6,28 @@
 #include "LinkedList.h"
 #include "ListNode.h"
 
-#include "Node.h"
 
 using namespace std;
 
+/*
+//print every item in the list
+template<typename data_t> ostream& operator<<(ostream& os, const LinkedList<data_t>& LL){
+	os<<"LL {"<<endl;
+	ListNode<data_t>* curNodePtr=LL.headNodePtr;
+	while(curNodePtr){
+		//os<<*curNodePtr<<", ";
+		os<<curNodePtr->data<<", ";
+		curNodePtr=curNodePtr->nextPtr;
+	}
+	os<<"}"<<endl;
+	return os;
+}
+*/	
+	
+//NOTE: all this is commented and instead implemented inLinkedList.h
+//This forces the compiler to implement this templated class for whatever types are necessary
+//May cause slower compilation times, but it avoids the need to explicitly instantiate this class for every type we want to use, which is buggy anyway
+	
 /*
 template<class data_t> LinkedList<data_t>::LinkedList():
 	headNodePtr(NULL)

@@ -17,6 +17,8 @@ A Simulation of MANET Source Routing in C++
 //other classes
 #include "LinkedList.h"
 #include "Node.h"
+#include "SourceNode.h"
+#include "MuleNode.h"
 #include "Packet.h"
 using namespace std;
 
@@ -49,62 +51,57 @@ int main(int argc, char* argv[]){
 	if(DEBUG) cout<<"Using "<<nSources<<" source nodes, "<<nReceivers<<" receiver nodes, and "<<nMules<<" mule nodes. Grid size is "<<gridSize<<"."<<endl;
 	
 	//init the nodes
-	Node** sourceNodePtrs 	= new Node*[nSources];
-	Node** muleNodePtrs 	= new Node*[nMules];
+	if (DEBUG)cout<<"Initializing Nodes Pointers..."<<endl;
+	SourceNode** sourceNodePtrs = new SourceNode*[nSources];
+	MuleNode** muleNodePtrs = new MuleNode*[nMules];
 	Node** receiverNodesPtrs= new Node*[nReceivers];
 	
 	//init the field
+	if (DEBUG)cout<<"Initializing Field..."<<endl;
+	//TODO: init the field here
 	
-	//variables to store packet properties
-	unsigned int sourceID, arrival_time, nPackets;	//source node
-	unsigned int pkt_size, SR_size;					//packets
+	//variables to store packet properties as they are read in from the input file
+	unsigned int sourceID, arrival_time, nPackets;	//source node properties
+	unsigned int pkt_size, SR_size;					//packet properties
 	LinkedList<Node*> packetRoutingQueue;			//Source routing Queue of each packet
 	unsigned int nodeID;							//rout of packets
 	
 	//read all lines of the file. Each line specifies a Source Node
 	string strLine;
 	stringstream ss;
-	unsigned int packetID =0;	//id to assign to all packets
-	for (unsigned int sNode=0;sNode<nSources;sNode++){
-	//while (getline(cin,strLine)){
-		if(DEBUG) cout<<"Line is "<<strLine<<endl;	//get each line, where a line represents one packet's information
+	unsigned int packetID =0;	//IDs to assign to all packets so we can keep track of them
+	if (DEBUG)cout<<"Parsing Source Nodes..."<<endl;
+	//for (unsigned int sNode=0;sNode<nSources;sNode++){
+	while (getline(cin,strLine)){
+		if(DEBUG) cout<<"\tLine is "<<strLine<<endl;	//get each line, where a line represents one packet's information
 		ss.clear();
 		ss<<strLine;
 		
 		ss>>sourceID;		//get the ID
 		ss>>arrival_time;	//get the arrival time of the node itself (acts as an offset to all the subsiquent packet sending times)		
-		ss>>nPackets;
+		ss>>nPackets;		//get the number of packets
+		ss>>pkt_size;		//get the size of the packet
+		pkt_size--;			//the given sizes are 1 based. convert to 0 based so they can be converted to our SIZE enum and used as array indeces for priority queue arrays
+		ss>>SR_size;		//get the number of nodes on it's routing list
 		
-		if(DEBUG) cout<<"\tSource ID "<<sourceID<<" arrived at time "<<arrival_time<<" and has "<<nPackets<<" packets to send."<<endl;
+		if(DEBUG) cout<<"\tSource ID "<<sourceID<<" arrived at time "<<arrival_time<<" and has "<<nPackets<<" packets if size "<<pkt_size<<" to send through a rout of "<<SR_size<<"nodes."<<endl;
+				
+		//loop through nodeIDs of the routing list of each packet
+		if(DEBUG) cout<<"\tParsing Routing Nodes of Packet: ";
+		for (unsigned int routNode=0; routNode<SR_size;routNode++){
+			ss>>nodeID;
+			if(DEBUG)cout<<nodeID<<" ";
+			packetRoutingQueue.push(sourceNodePtrs[nodeID]);
+		}
+		if(DEBUG) cout<<endl;
 		
 		//init each source node
 		if(DEBUG)cout<<"\tMaking Source Node..."<<endl;
-		sourceNodePtrs[sourceID]=new Node(sourceID);	//note this uses the sourceID provided by the command line, NOT the one we're looping through. We trust the testing data
+		sourceNodePtrs[sourceID]=new SourceNode(sourceID, arrival_time, nPackets, (SIZE)pkt_size, packetRoutingQueue);	//note this uses the sourceID provided by the command line, NOT the one we're looping through. We trust the testing data
 
-		//loop through packets of this sender node
-		for (unsigned int packet=0;packet<nPackets;packet++){
-			ss>>pkt_size;	//get the size of the packet
-			pkt_size--;		//the given sizes are 1 based. convert to 0 based so they can be used as array indeces
-			ss>>SR_size;	//get the number of nodes on it's routing list
-					
-			//loop through nodeIDs of the routing list of each packet
-			if(DEBUG) cout<<"\tRouting nodes:"<<endl;
-			for (unsigned int routNode=0; routNode<SR_size;routNode++){
-				ss>>nodeID;
-				if(DEBUG)cout<<nodeID<<" ";
-				packetRoutingQueue.push(sourceNodePtrs[nodeID]);
-			}
-			if(DEBUG) cout<<endl;
-			
-			//initialize this packet and push it on this node's packet queue
-			if(DEBUG)cout<<"\t...done parsing this packet's source routing list. Adding packet to Node's packet queue..."<<endl;
-			sourceNodePtrs[sourceID]->receivePacket(new Packet(packetID, (SIZE)pkt_size, arrival_time, packetRoutingQueue));
-			
-			packetID++;
-		}
+		//if(DEBUG)cout<<"\n\tNew source Packet:"<<*sourceNodePtrs[sourceID]<<endl;
 		
 		//field.placeSenderNode(sourceNodePtrs[sourceID]);
-
 	}
 	
 	cout<<"Starting simulation at time " << simTime<<"."<<endl;

@@ -12,6 +12,7 @@ template<class data_t> class LinkedList;
 //fundamental class for linked lists which function as Queues
 template<class data_t> class ListNode{
 	friend class LinkedList<data_t>;
+	//friend ostream& operator<< <data_t>(ostream& os, const ListNode<data_t>& lstNode);	//friend our printing helper function
 	private:
 		data_t data;
 		ListNode<data_t>* nextPtr;

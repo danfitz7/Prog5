@@ -35,11 +35,13 @@ int Packet::addPacket(Packet *newPacket)
 } //end addPacket function
 */
 
+/*
 ostream& operator<<(ostream& os, const Packet& packet){
 	os<< "Packet " << packet.ID << endl;
 	os<<"\tsent time: "<< packet.sentTime<<endl;
 	return os;
 }
+*/
 
 int Packet::getSize(){
 	return size;
