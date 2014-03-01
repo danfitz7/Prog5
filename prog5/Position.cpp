@@ -10,7 +10,7 @@ Position::Position():
 	y(-1)
 {}
 
-/*
+
 Position::Position(int X, int Y):
 	x(X),
 	y(Y)
@@ -45,4 +45,4 @@ Position Position::neighborOn(Direction d){
 	}
 	return Position(neighborX, neighborY);
 }
-*/
+

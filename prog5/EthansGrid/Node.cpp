@@ -5,13 +5,13 @@
 #include "Packet.h"
 #include "Position.h"
 #include "Node.h"
+#include "prog5.h"
 
 using namespace std;
 
 //constructor
 Node::Node(unsigned int  newID):
-	ID(newID),									//unique ID of this node (NOTE: this *should* correspond to it's index in the master Node* array)
-	pos(Position()),								//position of his node on the field
+	ID(newID),										//position of his node on the field
 	packetQueues(new LinkedList<Packet*>[3])	//small, medium, and large packet queues in an array of queues
 {}
 
@@ -22,8 +22,16 @@ void Node::receivePacket(Packet* newPacket){
 }	
 
 //places this node in a random unoccupied position on the global field such that the column, col, of this node's position is minCol<=col<maxCol
-void placeRandomly(unsigned int minCol, unsigned int maxCol){
-	//TODO: fill this in
+void Node::placeRandomly(unsigned int minCol, unsigned int maxCol){
+	int row = rand() % field.getSize();
+	int col = (rand() % maxCol) + minCol;
+	while (field.getElement(row, col))
+	{
+		row = rand() % field.getSize();
+		col = (rand() % maxCol) + minCol;
+	}
+	field.setElement(row, col, this);
+	pos.setXY(row, col);
 }
 
 bool Node::update(int time, int *packetID, int *S1average, int *S2average){ //updates Node, returns if Node is empty
@@ -64,18 +72,13 @@ bool Node::update(int time, int *packetID, int *S1average, int *S2average){ //up
 
 //overload the steam out operator so we can cout<<Node
 ostream& operator<<(ostream& os, const Node& node){
-	os<<"Node "<<(node.ID+1); //add one to the ID to make it 1-based again as it was in the input data
+	os<<"Node "<<node.ID;
 	return os;
 }
 
 //overload the steam out operator so we can cout<<Node*
 ostream& operator<<(ostream& os, const Node* nodePtr){
-	os<<"*";
-	if (nodePtr){
-		os<<(*nodePtr);	
-	}else{
-		os<<"UNININITIALIZED NODE";
-	}
+	os<<"NodePtr "<<(nodePtr->ID+1);	//add one to the ID to make it 1-based again as it was in the input data
 	return os;
 }
 

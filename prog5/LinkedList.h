@@ -2,15 +2,31 @@
 
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
-
+#include <iostream>
 #include "ListNode.h"
 
 //forward declare friended functions
 //template<data_t> ostream& operator<< <data_t>(ostream& os, const LinkedList<data_t>& LL);
-
-template<class data_t> class LinkedList{
-	//friend ostream& operator<< <data_t>(ostream& os, const LinkedList<data_t>& LL);
 	
+
+	
+
+
+//LINKED LISTS can act as queues or sorted queues
+template<class data_t> class LinkedList{
+	//helper overridden stream insertion operator to print every item in a linked list
+	friend ostream& operator<<(ostream& os, const LinkedList<data_t>& LL){
+		os<<"LL {";
+		ListNode<data_t>* curNodePtr=LL.headNodePtr;
+		while(curNodePtr){
+			//os<<(*curNodePtr)<<", ";
+			os<<(curNodePtr->getData())<<", ";
+			curNodePtr=curNodePtr->getNextPtr();
+		}
+		os<<"}";
+		return os;
+	}
+
 	private:
 		ListNode<data_t>* headNodePtr;
 		//listNode<data_t>* tailNodePtr;
@@ -23,6 +39,13 @@ template<class data_t> class LinkedList{
 			longestLength(0)
 		{}
 		
+		//copy a linked list (NOT DEEP COPY)
+		/*LinkedList(const LinkedList<data_t>& other):
+			headNodePtr(other.headNodePtr),
+			curLength(other.curLength),
+			longestLength(other.longestLength)
+		{}*/
+		
 		//template<class data_t>
 		~LinkedList(){
 			delete(headNodePtr);
@@ -32,16 +55,19 @@ template<class data_t> class LinkedList{
 			return longestLength;
 		}
 		
+		
 		//prints a list in order
 		void print(){
-			cout<<"data_t LIST: "<<endl;
+			cout<<"LL: {";
 			ListNode<data_t>* curNodePtr=headNodePtr;
 			while(curNodePtr){
-				cout<<"NODE: "<<curNodePtr->data<<endl;
+				cout<<(curNodePtr->data)<<", ";
 				//curNodePtr->dataPtr->print();
 				curNodePtr=curNodePtr->nextPtr;
 			}
+			cout<<"}"<<endl;
 		}
+		
 		
 		//push an item to the end of the list (FIFO/FCFS Queue)
 		void push(data_t data){

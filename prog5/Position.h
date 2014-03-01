@@ -11,9 +11,9 @@ class Position{
 		int y;
 	public:
 		Position();
-		//Position(int X, int Y);
-		//double distanceFrom(Position other);
-		//Position neighborOn(Direction d);
+		Position(int X, int Y);
+		double distanceFrom(Position other);
+		Position neighborOn(Direction d);
 };
 
 #endif

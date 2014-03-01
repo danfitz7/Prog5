@@ -10,7 +10,6 @@ class MuleNode: public Node {
 	private:
 		Direction dir;
 	public:
-		char getType(){return 'M';}
 		MuleNode(unsigned int  newID);
 		void hop();
 };

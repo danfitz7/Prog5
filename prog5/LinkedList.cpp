@@ -9,20 +9,7 @@
 
 using namespace std;
 
-/*
-//print every item in the list
-template<typename data_t> ostream& operator<<(ostream& os, const LinkedList<data_t>& LL){
-	os<<"LL {"<<endl;
-	ListNode<data_t>* curNodePtr=LL.headNodePtr;
-	while(curNodePtr){
-		//os<<*curNodePtr<<", ";
-		os<<curNodePtr->data<<", ";
-		curNodePtr=curNodePtr->nextPtr;
-	}
-	os<<"}"<<endl;
-	return os;
-}
-*/	
+	
 	
 //NOTE: all this is commented and instead implemented inLinkedList.h
 //This forces the compiler to implement this templated class for whatever types are necessary

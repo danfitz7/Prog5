@@ -20,17 +20,17 @@ private:
 		
 	int longestQueueLength; //longest ever length of Node's queue
 	
-	void placeRandomly(unsigned int minCol, unsigned int maxCol);		//place this node randomly on the field in a column such that minCol<=col<maxCol
+	
 public:
 	Node(unsigned int newID); //constructor
-	
-	char getType(){return 'N';}	//gets the type of the node
 	
 	int getID() { return ID; }
 	
 	int getPropTime() { return propTime; } //returns propTime
 	int getTranTime() { return tranTime; } //returns tranTime
-		
+	
+	void placeRandomly(unsigned int minCol, unsigned int maxCol);		//place this node randomly on the field in a column such that minCol<=col<maxCol
+	
 	//get/set position	
 	Position getPosition() { return pos; }
 	//void setposition(Position p) { pos=p; }	//we don;t want to ever set a Node's position, because we should always make sure the field reflects the node's new position. 

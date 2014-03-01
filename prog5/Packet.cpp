@@ -61,7 +61,11 @@ ostream& operator<<(ostream& os, const Packet& packet){
 
 //overload the stream output operator so we can easily print packets pointers.
 ostream& operator<<(ostream& os, const Packet* const packetPtr){
-	os << "PktPtr: {"<<*packetPtr<<"}";
+	if (packetPtr){
+		os << "PktPtr: {"<<*packetPtr<<"}";
+	}else{
+		os<<"UNINITIALIZED PACKET";
+	}
 	return os;
 }
 

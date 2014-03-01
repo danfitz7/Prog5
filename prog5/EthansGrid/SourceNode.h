@@ -14,8 +14,7 @@ class SourceNode: public Node {
 		SIZE pktSize;			//the size of each packet
 		LinkedList<Node*> SR;	//the Source Routing List of each packet this source node will send
 	public:
-		char getType(){return 'S';}
-		SourceNode(unsigned int sourceID, unsigned int arrival_time, unsigned int nPackets, SIZE pkt_size, LinkedList<Node*>  packetRoutingQueue);
+		SourceNode(unsigned int sourceID, unsigned int arrival_time, unsigned int nPackets, SIZE pkt_size, LinkedList<Node*> packetRoutingQueue);
 		//void sendNextPacket();
 };
 
