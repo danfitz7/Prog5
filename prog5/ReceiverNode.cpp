@@ -20,3 +20,7 @@ ostream& operator<<(ostream& os, const ReceiverNode& rcvrNode){
 	os<<"RECEIVER NODE: "<<(Node)rcvrNode;
 	return os;	
 }
+
+void ReceiverNode::finishPacket(Packet* packetPtr){
+	cout<<"Receiver Node "<<this<<" got packet "<<packetPtr<<endl;
+}

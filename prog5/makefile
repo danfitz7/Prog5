@@ -12,7 +12,7 @@ prog5.o: prog5.cpp ListNode.h LinkedList.h Node.h MuleNode.h SourceNode.o Receiv
 #LinkedList.o: LinkedList.cpp LinkedList.h ListNode.h Node.h prog5.h
 #	g++ -Wall -c LinkedList.cpp -I.	
 	
-Packet.o: Packet.cpp Packet.h LinkedList.h Node.h prog5.h
+Packet.o: Packet.cpp Packet.h LinkedList.h Node.h SourceNode.h prog5.h
 	g++ -Wall -c Packet.cpp -I.
 	
 Event.o: Event.cpp Event.h Packet.h prog5.h

@@ -95,7 +95,10 @@ int main(int argc, char* argv[]){
 	stringstream ss;
 	if (DEBUG)cout<<"Parsing Source Nodes..."<<endl;
 	//for (unsigned int sNode=0;sNode<nSources;sNode++){
+	unsigned int senderIndexCheck=0;
 	while (getline(cin,strLine)){
+		senderIndexCheck++;
+		
 		if(DEBUG) cout<<"\n\n\tLine is "<<strLine<<endl;	//get each line, where a line represents one packet's information
 		ss.clear();
 		ss<<strLine;
@@ -147,12 +150,47 @@ int main(int argc, char* argv[]){
 		//packetRoutingQueue.print();
 		
 		if(DEBUG)cout<<"\tNew source made: "<<(*sourceNodePtrs[sourceID])<<endl;
+		
+		if (senderIndexCheck!=nSources){
+			cout<<"ERROR: command line specified " << nSources << " sender nodes but file provided " << senderIndexCheck << "."<<endl;
+		}
 	}
 	
 	cout<<"Starting simulation at time " << simTime<<"."<<endl;
 	
-	//TODO: run the simulation here - should be similar to lab5
-	
+	bool anythingUpdated=true;
+	while(anythingUpdated){
+		if (DEBUG)cout<<"Sim Time " << simTime<<"."<<endl;
+		
+		anythingUpdated=false;//reset every timestep
+		
+		//loop through all nodes and update them
+		if (DEBUG)cout<<"SENDERS"<<endl;
+		for (unsigned int sourceIndex=0;sourceIndex<nSources;sourceIndex++){
+			anythingUpdated|=sourceNodePtrs[sourceIndex]->update();
+		}
+		if (DEBUG)cout<<endl<<"MULES"<<endl;
+		for (unsigned int muleIndex=0;muleIndex<nMules;muleIndex++){
+			anythingUpdated|=muleNodePtrs[muleIndex]->update();
+		}
+		if (DEBUG)cout<<endl<<"MULES"<<endl;
+		for (unsigned int receiverIndex=0; receiverIndex<nReceivers; receiverIndex++){
+			anythingUpdated|=receiverNodePtrs[receiverIndex]->update();
+		}
+		
+		//after every 10 seconds (100 100ms units) update the mule
+		if (simTime%100==0){
+			if (DEBUG)cout<<endl<<"HOPPING MULES"<<endl;
+			for (unsigned int muleIndex=0;muleIndex<nMules;muleIndex++){
+				anythingUpdated=true;
+				muleNodePtrs[muleIndex]->hop();
+			}
+		}
+		
+		
+		simTime++;//INCREMENT GLOBAL COUNT
+	}
+
 	//testAll();
 	cout<<"Done."<<endl;
 }

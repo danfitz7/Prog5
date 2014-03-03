@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "Packet.h"
-
+#include "SourceNode.h"
 using namespace std;
 
 ostream& operator<<(ostream& os, const SIZE& size){
@@ -23,11 +23,12 @@ ostream& operator<<(ostream& os, const SIZE& size){
 	return os;
 }
 
-Packet::Packet(unsigned int newID, SIZE size, int arrival_time, LinkedList<Node*> ROUTQ):
+Packet::Packet(unsigned int newID, SIZE size, int sent_time, SourceNode* SOURCEPTR, LinkedList<Node*> ROUTQ):
 	ID(newID),
 	size(size),
 	routQueue(ROUTQ),
-	sentTime(sentTime),
+	originNodePtr(SOURCEPTR),
+	sentTime(sent_time),
 	receivedTime(0)
 {}
 

@@ -21,6 +21,35 @@ SourceNode::SourceNode(unsigned int newID, unsigned int arrival_time, unsigned i
 
 }
 
+bool SourceNode::update(){
+	if (DEBUG)cout<<"\tSender"<<endl;
+	
+	bool stillUpdating = (Node*)this->update();	//Works like Java super (maybe?) - process events and packets like a normal node (although no one should be sending us packets)
+	if (nPackets>0){//if we still have packets left to send
+		if (!busy){	//if we're not already transmitting a packet
+			sendNextPacket();
+		}
+	}
+	return stillUpdating;
+}
+
+//start transmitting the next packet
+unsigned int SourceNode::nextPacketID=0;
+void SourceNode::sendNextPacket(){
+	nPackets--;	//one less left to send
+	
+	//make the packet's Routing Queue (just copy our array)
+	LinkedList<Node*> Q = LinkedList<Node*>();
+	for (unsigned int SRnodeIndex=0;SRnodeIndex<SR_length;SRnodeIndex++){
+		Q.push(SR[SRnodeIndex]);
+	}
+
+	Packet* newPacket = new Packet(nextPacketID, pktSize, simTime, this, Q);
+	
+	sendOutPacket(newPacket);
+	
+	nextPacketID++;
+}
 
 //for printing source nodes
 ostream& operator<<(ostream& os, const SourceNode& srcNode){

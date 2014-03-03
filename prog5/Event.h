@@ -5,7 +5,7 @@
 
 #include "Packet.h"
 
-enum EVENT_TYPE {ARRIVAL=0, TRANSMITTED=1, PROPAGATED=2};
+enum EVENT_TYPE {ARRIVAL=0, TRANSMITTED=1};
 
 class Event{
 	private:
@@ -16,7 +16,7 @@ class Event{
 	public:
 		Event(unsigned int , Packet*, EVENT_TYPE);
 		unsigned int getTime(){return time;}
-		const Packet* const getPacket(){return packetPtr;}
+		Packet* getPacket(){return packetPtr;}
 		EVENT_TYPE getType(){return type;}
 		bool operator<(Event other){return time<other.time;}
 };

@@ -52,6 +52,15 @@ template<class data_t> class LinkedList{
 		{}
 		*/
 		
+		//returns the first item on the list but does NOT pop it off yet
+		data_t peak(){
+			if (!headNodePtr){
+				//we're about to crash by trying to access a NULL ListNode's data. Be nice and print out why we're crashing
+				cout<<"ERROR: call to LinkedList::peak() without first checking LinkedList::isNotEmpty()"<<endl;
+			}
+			return headNodePtr->data;
+		}
+		
 		//template<class data_t>
 		~LinkedList(){
 			delete(headNodePtr);
@@ -60,8 +69,7 @@ template<class data_t> class LinkedList{
 		int getLongestLength(){
 			return longestLength;
 		}
-		
-		
+
 		//prints a list in order
 		void print(){
 			cout<<"LL: {";
@@ -94,8 +102,9 @@ template<class data_t> class LinkedList{
 				curLength--;
 				return oldHeadData;							//return the old head's data
 			}else{											//if the list is empty, return none
-				cout<<"ERROR: Popping from empty list!"<<endl;
-				return NULL;
+				//be nice and print out why things might crash after this
+				cout<<"ERROR: Popping from empty list - returning data from NULL head pointer!"<<endl;
+				return headNodePtr->data;
 			}
 		}
 		

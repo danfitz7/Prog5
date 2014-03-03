@@ -11,6 +11,7 @@ class ReceiverNode: public Node {
 	
 	private:
 		LinkedList<Packet*> receiverPackets;	//the Source Routing List of each packet this source node will send
+		void finishPacket(Packet* packetPtr);
 	public:
 		char getType(){return 'R';}
 		ReceiverNode(unsigned int sourceID);

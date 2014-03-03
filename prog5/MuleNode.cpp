@@ -19,4 +19,3 @@ void MuleNode::hop(){
 	cout<<"\tMULE HOPPING"<<endl;
 	//TODO: hopping logic here
 }
-
