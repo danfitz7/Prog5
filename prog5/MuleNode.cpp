@@ -12,7 +12,6 @@ MuleNode::MuleNode(unsigned int  newID):
 	dir((Direction)(newID%4))
 {
 //TODO: init position so it's in a random unoccupied field space
-
 }
 
 void MuleNode::hop(){

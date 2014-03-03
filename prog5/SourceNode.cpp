@@ -6,25 +6,43 @@
 #include "Node.h"
 #include "Position.h"
 
+extern unsigned int simTime;
 
 SourceNode::SourceNode(unsigned int newID, unsigned int arrival_time, unsigned int N_PACKETS, SIZE pkt_size, Node** SourceRoutArray, unsigned int routLength)://, LinkedList<Node*>  packetRoutingQueue
 	Node(newID),	//call constructor from superclass Node
 	arrivalTime(arrival_time),
 	nPackets(N_PACKETS),
 	pktSize(pkt_size),
-	SR(SourceRoutArray),
+	SR(new Node*[routLength]),
 	SR_length(routLength)
 {
-	SR[SR_length-1]=this;	//the last eld should be a pointer to the original sender (us), but we obviously can't have been initialized yet because this is our constructor, so make the last elt our pointer to complete the list
+	//copy the SourceRoutArray
+	for (int srIndex = routLength-2;srIndex>=0;srIndex--){
+		SR[srIndex]=SourceRoutArray[srIndex];
+	}
+	SR[SR_length-1]=this;	//the last elt should be a pointer to the original sender (us), but we obviously can't have been initialized yet because this is our constructor, so make the last elt our pointer to complete the list
 
-//TODO: init position so it's in a random unoccupied field space
-
+	/*if (DEBUG){
+		cout<<"\t\tNew Source Node ID "<<this<<" arrival= "<<arrivalTime<<" nPackets="<<nPackets<<" pksSize="<<pktSize<<endl;
+		cout<<" SR["<<SR_length<<"]={";
+		for (unsigned int nodeIndex=0;nodeIndex< SR_length; nodeIndex++){
+			cout<<SR[nodeIndex]<<", ";
+		}
+		cout<<"}";
+	}*/
+	//TODO: init position so it's in a random unoccupied field space
 }
 
 bool SourceNode::update(){
-	if (DEBUG)cout<<"\tSender"<<endl;
+	if (DEBUG)cout<<"\tSource Node "<<ID+1<<" updating..."<<endl;
 	
-	bool stillUpdating = (Node*)this->update();	//Works like Java super (maybe?) - process events and packets like a normal node (although no one should be sending us packets)
+	bool stillUpdating=false;
+	
+	//process events and packets like a normal node (although no one should be sending us packets)
+	stillUpdating|=checkEvents();
+	stillUpdating|=checkPacketQueues();
+	
+	//now to send packets
 	if (nPackets>0){//if we still have packets left to send
 		if (!busy){	//if we're not already transmitting a packet
 			sendNextPacket();
@@ -36,19 +54,23 @@ bool SourceNode::update(){
 //start transmitting the next packet
 unsigned int SourceNode::nextPacketID=0;
 void SourceNode::sendNextPacket(){
-	nPackets--;	//one less left to send
-	
-	//make the packet's Routing Queue (just copy our array)
-	LinkedList<Node*> Q = LinkedList<Node*>();
-	for (unsigned int SRnodeIndex=0;SRnodeIndex<SR_length;SRnodeIndex++){
-		Q.push(SR[SRnodeIndex]);
-	}
+	if (simTime>=arrivalTime){	//make sure we don't start sending packets before we arrive on the scene
+		if (DEBUG) cout << "\tSource "<<ID << " sending new packet "<<nextPacketID<<" at time "<<simTime<<endl;
 
-	Packet* newPacket = new Packet(nextPacketID, pktSize, simTime, this, Q);
-	
-	sendOutPacket(newPacket);
-	
-	nextPacketID++;
+		nPackets--;	//one less left to send
+		
+		//make the packet's Routing Queue (just copy our array)
+		LinkedList<Node*> Q = LinkedList<Node*>();
+		for (unsigned int SRnodeIndex=0;SRnodeIndex<SR_length;SRnodeIndex++){
+			Q.push(SR[SRnodeIndex]);
+		}
+
+		Packet* newPacketPtr = new Packet(nextPacketID, pktSize, simTime, this, Q);
+		
+		addEvent(Event(simTime+tranTime, newPacketPtr, TRANSMITTED));	//start processing this packet. next time we deal with it it will be transmitted
+		
+		nextPacketID++;
+	}
 }
 
 //for printing source nodes

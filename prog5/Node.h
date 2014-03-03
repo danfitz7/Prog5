@@ -49,7 +49,6 @@ public:
 	//int getTranTime() { return tranTime; } //returns tranTime
 		
 	Position getPosition() { return pos; }
-	
 
 	//MAIN UPDATE FUNCTION FOR ALL NODES
 	bool update(); 

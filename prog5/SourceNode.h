@@ -12,7 +12,7 @@ class SourceNode: public Node {
 		unsigned int arrivalTime;//time this sender node starts sending packets
 		unsigned int nPackets;	//the number of packets this sender will send through the entire simulation
 		SIZE pktSize;			//the size of each packet
-		Node** SR;				//LinkedList<Node*> SR;	//the Source Routing List of each packet this source node will send
+		Node** SR;				//the Source Routing List (stored as array) of each packet this source node will send
 		unsigned int SR_length;	//number of packets on the rout (length of the SR array)
 		
 		void sendNextPacket();

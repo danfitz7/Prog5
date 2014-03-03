@@ -24,7 +24,7 @@ A Simulation of MANET Source Routing in C++
 using namespace std;
 
 //global variables
-int simTime =0;
+unsigned int simTime =0;
 Grid field = Grid();
 
 //function prototypes
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
 	
 	//ensure there is the correct number of command line arguments (the first is the name of our program, the second should be the number of arguments to come from a file)
 	if (argc<5){
-		cout<<"ERROR: Proper usage requires at-least four earguments: <sources> <receivers> <mules> <dimension>"<<endl;
+		cout<<"ERROR: Proper usage requires at-least four arguments: <sources> <receivers> <mules> <dimension>"<<endl;
 		return 0;
 	}
 
@@ -61,28 +61,34 @@ int main(int argc, char* argv[]){
 	
 	if(DEBUG) cout<<"Using "<<nSources<<" source nodes, "<<nReceivers<<" receiver nodes, and "<<nMules<<" mule nodes. Grid size is "<<gridSize<<"."<<endl;
 	
+	//init the field
+	if (DEBUG)cout<<"Initializing Field..."<<endl;
+	field.setSize(gridSize);
+	
 	//init the nodes
 	if (DEBUG)cout<<"Initializing Nodes Pointers..."<<endl;
 	sourceNodePtrs = new SourceNode*[nSources];
 	muleNodePtrs = new MuleNode*[nMules];
 	receiverNodePtrs= new ReceiverNode*[nReceivers];
 	
+
+	unsigned int newNodeID=nSources;
+	
 	//init the mule nodes
-	unsigned int lastMuleIndex=nSources+nMules;
-	for (unsigned int muleID=nMules;muleID<lastMuleIndex;muleID++){
-		muleNodePtrs[muleID]=new MuleNode(muleID);
+	//unsigned int lastMuleIndex=nSources+nMules;
+	if (DEBUG) cout<<endl<<"\n\tInitializing "<<nMules<<" mules nodes..."<<endl;
+	for (unsigned int muleID=0;muleID<nMules;muleID++){
+		muleNodePtrs[muleID]=new MuleNode(newNodeID);
+		newNodeID++;
 	}
 	
 	//init the receiver nodes
-	unsigned int lastReceiverIndex=nSources+nMules+nReceivers;
-	for (unsigned int receiverID=lastMuleIndex;receiverID<lastReceiverIndex; receiverID++){
-		receiverNodePtrs[receiverID]=new ReceiverNode(receiverID);
+	//unsigned int lastReceiverIndex=nSources+nMules+nReceivers;
+	if (DEBUG) cout<<endl<<"\n\tInitializing "<<nReceivers<<" receiver nodes..."<<endl;
+	for (unsigned int receiverID=0;receiverID<nReceivers; receiverID++){
+		receiverNodePtrs[receiverID]=new ReceiverNode(newNodeID);
+		newNodeID++;
 	}
-	
-	//init the field
-	if (DEBUG)cout<<"Initializing Field..."<<endl;
-	//TODO: init the field here
-	//field=new grid(gridSize);
 	
 	//variables to store packet properties as they are read in from the input file
 	unsigned int sourceID, arrival_time, nPackets;	//source node properties
@@ -98,6 +104,10 @@ int main(int argc, char* argv[]){
 	unsigned int senderIndexCheck=0;
 	while (getline(cin,strLine)){
 		senderIndexCheck++;
+		if (senderIndexCheck>nSources){
+			cout<<"ERROR: More source node lines in file than were specified by the command line!"<<endl;
+			break;
+		}
 		
 		if(DEBUG) cout<<"\n\n\tLine is "<<strLine<<endl;	//get each line, where a line represents one packet's information
 		ss.clear();
@@ -115,7 +125,7 @@ int main(int argc, char* argv[]){
 		
 		if(DEBUG) cout<<"\tSource Node ID "<<sourceID+1<<" arrived at time "<<arrival_time<<" and has "<<nPackets<<" packets if size "<<pktSize<<" to send through a rout of "<<SR_size<<" nodes."<<endl;
 				
-		//loop through nodeIDs of the routing list of each packet
+		//loop through nodeIDs of the routing list of each packet, adding them in reverse from the back of the array
 		if(DEBUG) cout<<"\tParsing Routing Nodes of Packet: ";
 		unsigned int routingNodeIndexArray[SR_size];//= new unsigned int[SR_size];
 		for (unsigned int routNode=0; routNode<SR_size;routNode++){
@@ -125,42 +135,38 @@ int main(int argc, char* argv[]){
 		}
 		if(DEBUG) cout<<endl;
 		
-		if (DEBUG) cout<<"\tPushing on the array in reverse order."<<endl;
+		if (DEBUG) cout<<"\tPushing on the array in reverse order: ";
 		Node** sourceRoute = new Node*[SR_size];
 		unsigned int lastNodeArrayIndex=SR_size-1;
 		for (int routNode=lastNodeArrayIndex; routNode>=0;routNode--){
-			sourceRoute[lastNodeArrayIndex-routNode]=getPtrOfNode(routingNodeIndexArray[routNode]);
+			unsigned int sourceNodeID=routingNodeIndexArray[routNode];
+			if (DEBUG) cout<<sourceNodeID+1<<", ";
+			sourceRoute[lastNodeArrayIndex-routNode]=getPtrOfNode(sourceNodeID);
 		}
+		if (DEBUG) cout<<endl;
 		
 		//init each source node
 		if(DEBUG)cout<<"\tMaking Source Node "<<sourceID+1<<"..."<<endl;
 		sourceNodePtrs[sourceID]=new SourceNode(sourceID, arrival_time, nPackets, pktSize, sourceRoute, SR_size);	//note this uses the sourceID provided by the command line, NOT the one we're looping through. We trust the testing data
-		
-		/*
-		//push the routing nodes in reverse order
-//		cout<<"\tPushing in reverse order: ";
-		for (int routNode=SR_size-1; routNode>=0;routNode--){
-//			cout<<(routingNodeIndexArray[routNode]+1)<<", ";
-			sourceNodePtrs[sourceID]->pushSR(getPtrOfNode(routingNodeIndexArray[routNode]));
+		//if(DEBUG)cout<<"\t...done"<<endl;
+		if (!sourceNodePtrs[sourceID]){
+			cout<<"ERROR: Source Node creation failed!"<<endl;
 		}
-		cout<<endl;
-		*/
-		
-		//cout<<"\tFinal routing Queue is: ";
-		//packetRoutingQueue.print();
-		
 		if(DEBUG)cout<<"\tNew source made: "<<(*sourceNodePtrs[sourceID])<<endl;
 		
-		if (senderIndexCheck!=nSources){
-			cout<<"ERROR: command line specified " << nSources << " sender nodes but file provided " << senderIndexCheck << "."<<endl;
-		}
 	}
 	
-	cout<<"Starting simulation at time " << simTime<<"."<<endl;
+	if (senderIndexCheck!=nSources){
+		cout<<"ERROR: command line specified " << nSources << " sender nodes but file provided " << senderIndexCheck << "."<<endl;
+	}
+	
+	cout<<"\n\n\nStarting simulation at time " << simTime<<"."<<endl;
 	
 	bool anythingUpdated=true;
 	while(anythingUpdated){
 		if (DEBUG)cout<<"Sim Time " << simTime<<"."<<endl;
+
+		if (sim%1000==0) field.print();
 		
 		anythingUpdated=false;//reset every timestep
 		
@@ -173,7 +179,7 @@ int main(int argc, char* argv[]){
 		for (unsigned int muleIndex=0;muleIndex<nMules;muleIndex++){
 			anythingUpdated|=muleNodePtrs[muleIndex]->update();
 		}
-		if (DEBUG)cout<<endl<<"MULES"<<endl;
+		if (DEBUG)cout<<endl<<"RECEIVERS"<<endl;
 		for (unsigned int receiverIndex=0; receiverIndex<nReceivers; receiverIndex++){
 			anythingUpdated|=receiverNodePtrs[receiverIndex]->update();
 		}
@@ -199,10 +205,13 @@ int main(int argc, char* argv[]){
 Node* getPtrOfNode(unsigned int index){
 	if (index<nSources){
 		return sourceNodePtrs[index];
-	}else if (index>=(nSources+nMules)){
-		return receiverNodePtrs[index];
+	}else if ((index >= nSources) && (index < nSources+nMules)){
+		return muleNodePtrs[index-nSources];
+	}else if ((index >= nSources+nMules) && (index < nSources+nMules+nReceivers)){
+		return receiverNodePtrs[index-(nSources+nMules)];
 	}else{
-		return muleNodePtrs[index];
+		cout << "ERROR: request for Node* of node ID "<<index<<" which is out of bounds!"<<endl;
+		return NULL;
 	}
 }
 
