@@ -19,6 +19,7 @@ A Simulation of MANET Source Routing in C++
 #include "Node.h"
 #include "SourceNode.h"
 #include "MuleNode.h"
+#include "ReceiverNode.h"
 #include "Packet.h"
 using namespace std;
 
@@ -36,7 +37,7 @@ unsigned int nMules; 	//the number of lines should be the second argument
 unsigned int gridSize; 	//the number of lines should be the second argument
 SourceNode** sourceNodePtrs;
 MuleNode** muleNodePtrs;
-Node** receiverNodePtrs;
+ReceiverNode** receiverNodePtrs;
 
 /*
 Event-Driven simulation of MANET nodes
@@ -64,7 +65,7 @@ int main(int argc, char* argv[]){
 	if (DEBUG)cout<<"Initializing Nodes Pointers..."<<endl;
 	sourceNodePtrs = new SourceNode*[nSources];
 	muleNodePtrs = new MuleNode*[nMules];
-	receiverNodePtrs= new Node*[nReceivers];
+	receiverNodePtrs= new ReceiverNode*[nReceivers];
 	
 	//init the mule nodes
 	unsigned int lastMuleIndex=nSources+nMules;
@@ -75,7 +76,7 @@ int main(int argc, char* argv[]){
 	//init the receiver nodes
 	unsigned int lastReceiverIndex=nSources+nMules+nReceivers;
 	for (unsigned int receiverID=lastMuleIndex;receiverID<lastReceiverIndex; receiverID++){
-		receiverNodePtrs[receiverID]=new Node(receiverID);
+		receiverNodePtrs[receiverID]=new ReceiverNode(receiverID);
 	}
 	
 	//init the field
@@ -121,10 +122,18 @@ int main(int argc, char* argv[]){
 		}
 		if(DEBUG) cout<<endl;
 		
+		if (DEBUG) cout<<"\tPushing on the array in reverse order."<<endl;
+		Node** sourceRoute = new Node*[SR_size];
+		unsigned int lastNodeArrayIndex=SR_size-1;
+		for (int routNode=lastNodeArrayIndex; routNode>=0;routNode--){
+			sourceRoute[lastNodeArrayIndex-routNode]=getPtrOfNode(routingNodeIndexArray[routNode]);
+		}
+		
 		//init each source node
 		if(DEBUG)cout<<"\tMaking Source Node "<<sourceID+1<<"..."<<endl;
-		sourceNodePtrs[sourceID]=new SourceNode(sourceID, arrival_time, nPackets, pktSize);	//note this uses the sourceID provided by the command line, NOT the one we're looping through. We trust the testing data
-
+		sourceNodePtrs[sourceID]=new SourceNode(sourceID, arrival_time, nPackets, pktSize, sourceRoute, SR_size);	//note this uses the sourceID provided by the command line, NOT the one we're looping through. We trust the testing data
+		
+		/*
 		//push the routing nodes in reverse order
 //		cout<<"\tPushing in reverse order: ";
 		for (int routNode=SR_size-1; routNode>=0;routNode--){
@@ -132,6 +141,7 @@ int main(int argc, char* argv[]){
 			sourceNodePtrs[sourceID]->pushSR(getPtrOfNode(routingNodeIndexArray[routNode]));
 		}
 		cout<<endl;
+		*/
 		
 		//cout<<"\tFinal routing Queue is: ";
 		//packetRoutingQueue.print();

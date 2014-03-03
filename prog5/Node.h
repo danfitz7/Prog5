@@ -26,7 +26,7 @@ private:
 public:
 	Node(unsigned int newID); //constructor
 	
-	char getType(){return 'N';}	//gets the type of the node
+	char getType() const {return 'N';}	//gets the type of the node
 	
 	int getID() { return ID; }
 	

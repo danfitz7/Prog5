@@ -90,7 +90,7 @@ bool Node::update(){ //updates Node, returns if Node is empty
 
 //overload the steam out operator so we can cout<<Node
 ostream& operator<<(ostream& os, const Node& node){
-	os<<"Node "<<(node.ID+1); //add one to the ID to make it 1-based again as it was in the input data
+	os<<node.getType()/*"Node "*/<<(node.ID+1); //add one to the ID to make it 1-based again as it was in the input data
 	return os;
 }
 
