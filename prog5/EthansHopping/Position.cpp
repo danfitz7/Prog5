@@ -18,15 +18,21 @@ Position::Position(int X, int Y):
 
 Position::Position(int pos) //constructor if given position in terms of field position
 {
-	int length=field.getLength();
-	x=pos%length;
-	y=pos/length;
+	int row = 0;
+	while (pos > field.getSize() + 2)
+	{
+		row++;
+		pos -= (field.getSize() + 2);
+	}
+	x = row;
+	y = pos;
 }
 
 //euclidean distance to the given position
+//TODO: should this be an int?
 double Position::distanceFrom(Position other){
-	int xdiff = x-other.x;
-	int ydiff = y=other.y;
+	int xdiff=x-other.x;
+	int ydiff=y=other.y;
 	xdiff*=xdiff;
 	ydiff*=ydiff;
 	return sqrt(xdiff+ydiff);

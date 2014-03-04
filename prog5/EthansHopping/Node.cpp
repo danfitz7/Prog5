@@ -1,9 +1,6 @@
 //Ethan Coeytaux
 //Daniel Fitzgerald
 
-//debug flag and global vars
-#include "prog5.h"
-
 #include <math.h>
 #include <iostream>
 #include "Packet.h"
@@ -27,30 +24,20 @@ Node::Node(unsigned int  newID, char newType):
 	propTime(0),
 	busy(false),
 	type(newType)
-{
-	if(DEBUG)cout<<"\t\tNode "<<ID+1<<" initialized."<<endl;
-}
+{}
 
-void Node::place(Position p){
-	if (!field.getElement(p)){
-		field.setElement(p, this);
-		pos.setPosition(p);
-	}else{
-		cout<<"ERROR: attempted to place node in occupied field position!"<<endl;
-	}
-}
 
 //places this node in a random unoccupied position on the global field such that the column, col, of this node's position is minCol<=col<maxCol
 void Node::placeRandomly(unsigned int minCol, unsigned int maxCol){
-	Position p =field.getUnoccupiedPosition(minCol, maxCol);
-	cout<<"\t\t\tPlacing node randomly at "<<p<<endl;
-	place(p);
-}
-
-void Node::placeRandomly(unsigned int col){
-	Position p =field.getUnoccupiedPosition(col);
-	cout<<"\t\t\tPlacing node randomly at "<<p<<endl;
-	place(p);
+	int row = rand() % field.getSize();
+	int col = (rand() % maxCol) + minCol;
+	while (field.getElement(Position(row,col)) != NULL)
+	{
+		row = rand() % field.getSize();
+		col = (rand() % maxCol) + minCol;
+	}
+	field.setElement(Position(row,col), this);
+	pos.setXY(row, col);
 }
 
 //add this event to the event queue, or deal with it if it's happening right now
@@ -94,17 +81,13 @@ void Node::sendOutPacket(Packet* packetPtr){
 
 //processes the given event
 void Node::processEvent(Event event){
-	if (DEBUG) cout<<"\tNode "<<ID<<" checking event list..."<<endl;
 	EVENT_TYPE type = event.getType();
-	Packet* thePacket=event.getPacket();
 	switch(type){
 		case ARRIVAL:	//a new packet has arrived - add it to our queue
-			if (DEBUG) cout<<"\t\t\tPacket "<<thePacket->getID()<<" arrived- adding to queue."<<endl;
-			addPacket(thePacket);
+			addPacket(event.getPacket());
 			break;
 		case TRANSMITTED:	//a packet finished transmitting within this node - send it out
-			if (DEBUG) cout<<"\t\t\tPacket "<<thePacket->getID()<<" finished transmitting - sending to next Node."<<endl;
-			sendOutPacket(thePacket);
+			sendOutPacket(event.getPacket());
 			busy=false;	//we finished processing a packet! yay!
 			break;
 		default:
@@ -114,7 +97,6 @@ void Node::processEvent(Event event){
 }
 
 bool Node::checkEvents(){
-	if (DEBUG) cout<<"\t\tNode "<<ID<<" checking event list..."<<endl;
 	bool stillUpdating=false;
 	//check if there's any new events to process
 	while(eventList.isNotEmpty()){					//if there's another event on the queue
@@ -128,7 +110,6 @@ bool Node::checkEvents(){
 }
 
 bool Node::checkPacketQueues(){
-	if (DEBUG) cout<<"\t\tNode "<<ID<<" checking packet queues..."<<endl;
 	bool stillUpdating=false;
 	//check if there's anything in our priority queues, smallest first
 	if (!busy){	//if we're not busy already processing (transmitting) a packet
@@ -136,8 +117,8 @@ bool Node::checkPacketQueues(){
 		for (priorityQueueIndex=0; priorityQueueIndex<3; priorityQueueIndex++){
 			if (packetQueues[priorityQueueIndex].isNotEmpty()){
 				stillUpdating=true;	//there's still packets to process
-				Packet* nextPacketToSendPtr = packetQueues[priorityQueueIndex].pop();	//pop the packet off the queue
-				addEvent(Event(simTime+tranTime, nextPacketToSendPtr, TRANSMITTED));	//start processing this packet
+				Packet* nextPacketToSendPtr = packetQueues[priorityQueueIndex].pop();
+				addEvent(Event(simTime+propTime, nextPacketToSendPtr, TRANSMITTED));	//start processing this packet
 				busy=true;
 				break;	//don't keep popping from any more of our priority queues
 			}
@@ -147,12 +128,11 @@ bool Node::checkPacketQueues(){
 }
 
 bool Node::update(){ //updates Node, returns if Node is empty
-	if (DEBUG) cout<<"\tNode "<<ID<<" updating..."<<endl;
 	bool stillUpdating=false;	//flag to see if we updated ourselves or know we will again
 	
-	stillUpdating|=checkEvents();
+	stillUpdating&=checkEvents();
 	
-	stillUpdating|=checkPacketQueues();
+	stillUpdating&=checkPacketQueues();
 	
 	return stillUpdating;
 	
@@ -204,7 +184,7 @@ bool Node::update(){ //updates Node, returns if Node is empty
 
 //overload the steam out operator so we can cout<<Node
 ostream& operator<<(ostream& os, const Node& node){
-	os<<node.getType()/*"Node "*/<<(node.ID+1); //add one to the ID to make it 1-based again as it was in the input data
+	os<<node.type/*"Node "*/<<(node.ID+1); //add one to the ID to make it 1-based again as it was in the input data
 	return os;
 }
 

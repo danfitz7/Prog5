@@ -11,41 +11,41 @@ MuleNode::MuleNode(unsigned int  newID):
 	Node(newID, 'M'),	//call constructor from superclass Node
 	dir((Direction)(newID%4))
 {
-	placeRandomly(1, field.getLength()-1);
+//TODO: init position so it's in a random unoccupied field space
+	placeRandomly(1, field.getSize());
 }
 
 void MuleNode::hop(){
-	int height = field.getHeight(); //get height of field (vertical)
-	int length=field.getLength();	//get length of field (horizontal)
-	int tempPos = (pos.getX() * length) + pos.getY(); //position of node on field
+	int size = field.getSize(); //get size of field
+	int tempPos = (pos.getX() * (size + 2)) + pos.getY(); //position of node on field
 	Node* tempNode = field.getElement(*(new Position(tempPos))); //holds node
 	field.setElement(*(new Position(tempPos)), NULL); //clears spot node is currently occupying
 	bool complete = false;
 	switch(dir) //checks to make sure node is not backed up against wall and needs to switch direction
 	{
 		case EAST:
-		if ((tempPos + 2) % length == 0)
+		if ((tempPos + 2) % (size + 2) == 0)
 		{
 			dir = WEST;
 			complete = true;
 		}
 		break;
 		case WEST:
-		if ((tempPos - 1) % length == 0)
+		if ((tempPos - 1) % (size + 2) == 0)
 		{
 			dir = EAST;
 			complete = true;
 		}
 		break;
 		case SOUTH:
-		if (tempPos >= (height - 1) * length)
+		if (tempPos >= (size - 1) * (size + 2))
 		{
 			dir = NORTH;
 			complete = true;
 		}
 		break;
 		case NORTH:
-		if (tempPos < length)
+		if (tempPos < size + 2)
 		{
 			dir = SOUTH;
 			complete = true;
@@ -59,19 +59,19 @@ void MuleNode::hop(){
 			switch(dir)
 			{
 				case EAST:
-				if ((tempPos + 2) % length != 0) tempPos++;
+				if ((tempPos + 2) % (size + 2) != 0) tempPos++;
 				else dir = WEST;
 				break;
 				case WEST:
-				if ((tempPos - 1) % length != 0) tempPos--;
+				if ((tempPos - 1) % (size + 2) != 0) tempPos--;
 				else dir = EAST;
 				break;
 				case SOUTH:
-				if (tempPos < (height - 1) * length) tempPos += length;
+				if (tempPos < (size - 1) * (size + 2)) tempPos += (size + 2);
 				else dir = NORTH;
 				break;
 				case NORTH:
-				if (tempPos >= length) tempPos -= length;
+				if (tempPos >= size + 2) tempPos -= (size + 2);
 				else dir = SOUTH;
 				break;
 			}
@@ -80,11 +80,10 @@ void MuleNode::hop(){
 	field.setElement(*(new Position(tempPos)), tempNode); //places new node
 	int row = 0; //updates position inside node
 	int col = tempPos;
-	
-	while (col > length)
+	while (col > size + 2)
 	{
 		row++;
-		col -= length;
+		col -= (size + 2);
 	}
 	pos.setXY(row, col);
 }

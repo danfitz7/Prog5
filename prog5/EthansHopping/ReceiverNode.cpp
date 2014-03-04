@@ -10,7 +10,8 @@
 ReceiverNode::ReceiverNode(unsigned int newID):
 	Node(newID, 'R')	//call constructor from superclass Node
 {
-	placeRandomly(field.getLength()-1);
+//TODO: receiver stuff here
+	placeRandomly(field.getSize() + 1, 1);
 }
 
 

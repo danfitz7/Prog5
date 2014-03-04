@@ -14,15 +14,16 @@ Grid::Grid()
 
 void Grid::setSize(int newSize)
 {
-	size = newSize;
-	field = new Node*[size * (size + 2)];
+	height = newSize;
+	length=height+2;
+	field = new Node*[height * length];
 }
 
 void Grid::setElement(Position p, Node* element)
 {
 	int row=p.getY();
 	int col=p.getX();
-	int pos = (row * (size + 2)) + col;
+	int pos = (row * length) + col;
 	field[pos] = element;
 }
 
@@ -30,26 +31,47 @@ Node* Grid::getElement(Position p)
 {
 	int row=p.getY();
 	int col=p.getX();
-	int pos = (row * (size + 2)) + col;
+	int pos = (row * length) + col;
 	return field[pos];
+}
+
+//returns a random position between with a column col where minCol<=col<maxCol
+Position Grid::getUnoccupiedPosition(int minCol, int maxCol){
+	int row, col;
+	int range=maxCol-minCol;
+	do{
+		row = rand() % height;
+		col = (rand() % range) + minCol;
+	}while (getElement(Position(col,row)));
+	return Position(col, row);
+}
+
+Position Grid::getUnoccupiedPosition(int col){
+	int row;
+	do{
+		row = rand() % height;
+	}while (getElement(Position(col,row)));
+	return Position(col, row);
 }
 
 void Grid::print()
 {
 	cout << "--------------------------------------------------------------------------------------------------------------------" << endl;
 	int i, j;
-	for (i = 0; i < size; i++)
+	for (i = 0; i < height; i++)
 	{
 		cout << "|";
-		for (j = 0; j < size + 2; j++)
+		for (j = 0; j < length; j++)
 		{
-			if (field[(i * (size + 2)) + j]) cout << " " << ((*field[(i * (size + 2)) + j]).getID() >= 9 ? "" : " ") << *field[(i * (size + 2)) + j];
+			int index=(i * length) + j;
+			if (field[index]) cout << " " << ((field[index]->getID() >= 9) ? "" : " ") << *field[index];
 			else cout << "   ";
 		}
 		cout << "|" << endl;
 	}
 	cout << "--------------------------------------------------------------------------------------------------------------------" << endl;
 }
+
 
 
 

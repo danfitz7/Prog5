@@ -32,19 +32,18 @@ protected:
 	void processEvent(Event event);			//process an event
 	bool checkEvents();						//check if there's any more events to do right now
 	bool checkPacketQueues();				//check if there's any backlog of packets to process
-	bool busy;								//is this node currently busy transmitting a packet
-	char type;								//'S', 'M', or 'R' for Source/Senders, Mules, and Receivers (used for debug printing)
+	bool busy;						//is this node currently busy transmitting a packet
+
+	char type;
 	
 	//misc helper
-	void place(Position p);
 	void placeRandomly(unsigned int minCol, unsigned int maxCol);		//place this node randomly on the field in a column such that minCol<=col<maxCol
-	void placeRandomly(unsigned int row);
 	unsigned int calcPropagationTimeTo(Node* otherNode);
 
 public:
 	Node(unsigned int newID, char newType); //constructor
 	
-	char getType() const {return type;}	//gets the type of the node
+	char getType() const {return 'N';}	//gets the type of the node
 	int getID() { return ID; }
 	int getLongestQueueLength() { return longestQueueLength; } //returns max Node length
 	
@@ -52,6 +51,7 @@ public:
 	//int getTranTime() { return tranTime; } //returns tranTime
 		
 	Position getPosition() { return pos; }
+	
 
 	//MAIN UPDATE FUNCTION FOR ALL NODES
 	bool update(); 

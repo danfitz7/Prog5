@@ -7,11 +7,6 @@
 enum Direction {EAST=0, SOUTH=1, WEST=2, NORTH=3};
 
 class Position{
-	friend ostream& operator<<(ostream& os, const Position& p){
-		os<<'('<<p.x<<','<<p.y<<')';
-		return os;
-	}
-	
 	private:
 		int x;
 		int y;
@@ -19,13 +14,10 @@ class Position{
 		Position();
 		Position(int X, int Y);
 		Position(int pos);
-		
 		double distanceFrom(Position other);
 		Position neighborOn(Direction d);
-		
 		void setXY(int newX, int newY){x=newX; y=newY;}
 		void setPosition(Position p){x=p.x; y=p.y;}
-		
 		int getX(){return x;}
 		int getY(){return y;}
 };
