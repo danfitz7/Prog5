@@ -53,7 +53,7 @@ template<class data_t> class LinkedList{
 		*/
 		
 		//returns the first item on the list but does NOT pop it off yet
-		data_t peak(){
+		data_t peek(){
 			if (!headNodePtr){
 				//we're about to crash by trying to access a NULL ListNode's data. Be nice and print out why we're crashing
 				cout<<"ERROR: call to LinkedList::peak() without first checking LinkedList::isNotEmpty()"<<endl;

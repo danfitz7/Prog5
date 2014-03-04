@@ -28,7 +28,7 @@ protected:
 	void addEvent(Event newEvent);			//other node's can add events to our event list
 	void addPacket(Packet*);				//we can add packets to our packet list
 	void finishPacket(Packet* packetPtr);	//what we do with a packet when we receive it and it has nowhere more to go
-	void sendOutPacket(Packet*);			//send a packet that still has some source rout nodes on it's queue
+	void processPacket(Packet*);			//send a packet that still has some source rout nodes on it's queue
 	void processEvent(Event event);			//process an event
 	bool checkEvents();						//check if there's any more events to do right now
 	bool checkPacketQueues();				//check if there's any backlog of packets to process

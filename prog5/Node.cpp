@@ -82,9 +82,14 @@ unsigned int Node::calcPropagationTimeTo(Node* otherNode){
 }
 
 //sends sends the given event out to it's next stop by adding an arrival event for the packet to that node
-void Node::sendOutPacket(Packet* packetPtr){
-	Node* nextNodePtr=packetPtr->popNextNodeOnRout();	//pop the next node off the packet's source routing queue
+void Node::processPacket(Packet* packetPtr){
+	Node* intendedRecipient = packetPtr->popNextNodeOnRout();	//pop ourselves off the packet's source routing queue
+	if (intendedRecipient != this){
+		cout<<"ERROR: Packet was not sent to correct node! Packet "<<packetPtr<<" sent to "<<this<<" instead of "<<intendedRecipient<<endl;
+	}
+	Node* nextNodePtr=packetPtr->getNextNodeOnRout();	//peek (but don't pop) the next node on this pointer's journey
 	if (nextNodePtr){
+		if(DEBUG) cout<<"\t\tSending packet "<<packetPtr<<" to node "<<nextNodePtr<<endl;
 		unsigned int estimatedArrivalTime = simTime+calcPropagationTimeTo(nextNodePtr);
 		nextNodePtr->addEvent(Event(estimatedArrivalTime, packetPtr, ARRIVAL));
 	}else{
@@ -94,17 +99,17 @@ void Node::sendOutPacket(Packet* packetPtr){
 
 //processes the given event
 void Node::processEvent(Event event){
-	if (DEBUG) cout<<"\tNode "<<ID<<" checking event list..."<<endl;
+	if (DEBUG) cout<<"\tNode "<<ID+1<<" checking event list..."<<endl;
 	EVENT_TYPE type = event.getType();
 	Packet* thePacket=event.getPacket();
 	switch(type){
 		case ARRIVAL:	//a new packet has arrived - add it to our queue
-			if (DEBUG) cout<<"\t\t\tPacket "<<thePacket->getID()<<" arrived- adding to queue."<<endl;
+			if (DEBUG) cout<<"\t\tPacket "<<thePacket->getID()<<" arrived- adding to queue."<<endl;
 			addPacket(thePacket);
 			break;
 		case TRANSMITTED:	//a packet finished transmitting within this node - send it out
-			if (DEBUG) cout<<"\t\t\tPacket "<<thePacket->getID()<<" finished transmitting - sending to next Node."<<endl;
-			sendOutPacket(thePacket);
+			if (DEBUG) cout<<"\t\tPacket "<<thePacket->getID()<<" finished transmitting - sending to next Node."<<endl;
+			processPacket(thePacket);
 			busy=false;	//we finished processing a packet! yay!
 			break;
 		default:
@@ -114,12 +119,12 @@ void Node::processEvent(Event event){
 }
 
 bool Node::checkEvents(){
-	if (DEBUG) cout<<"\t\tNode "<<ID<<" checking event list..."<<endl;
+	if (DEBUG) cout<<"\t\tNode "<<ID+1<<" checking event list..."<<endl;
 	bool stillUpdating=false;
 	//check if there's any new events to process
 	while(eventList.isNotEmpty()){					//if there's another event on the queue
 		stillUpdating=true;							//if there's anything left on our event list then we will need to update again
-		if (eventList.peak().getTime() > simTime){	//the next event hasn't happened yet
+		if (eventList.peek().getTime() > simTime){	//the next event hasn't happened yet
 			break;									//then we can't do anything until it happens - try processing some packets on our queue while we wait.
 		}
 		processEvent(eventList.pop());				//if the next event does happen now, pop it and deal with it! 
@@ -128,7 +133,7 @@ bool Node::checkEvents(){
 }
 
 bool Node::checkPacketQueues(){
-	if (DEBUG) cout<<"\t\tNode "<<ID<<" checking packet queues..."<<endl;
+	if (DEBUG) cout<<"\t\tNode "<<ID+1<<" checking packet queues..."<<endl;
 	bool stillUpdating=false;
 	//check if there's anything in our priority queues, smallest first
 	if (!busy){	//if we're not busy already processing (transmitting) a packet
@@ -147,7 +152,7 @@ bool Node::checkPacketQueues(){
 }
 
 bool Node::update(){ //updates Node, returns if Node is empty
-	if (DEBUG) cout<<"\tNode "<<ID<<" updating..."<<endl;
+	if (DEBUG) cout<<"\tNode "<<ID+1<<" updating..."<<endl;
 	bool stillUpdating=false;	//flag to see if we updated ourselves or know we will again
 	
 	stillUpdating|=checkEvents();
@@ -204,7 +209,7 @@ bool Node::update(){ //updates Node, returns if Node is empty
 
 //overload the steam out operator so we can cout<<Node
 ostream& operator<<(ostream& os, const Node& node){
-	os<<node.getType()/*"Node "*/<<(node.ID+1); //add one to the ID to make it 1-based again as it was in the input data
+	os<<node.type<<(node.ID+1); //add one to the ID to make it 1-based again as it was in the input data
 	return os;
 }
 

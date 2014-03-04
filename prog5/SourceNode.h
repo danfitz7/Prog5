@@ -19,7 +19,6 @@ class SourceNode: public Node {
 		
 		static unsigned int nextPacketID;//ID of the next packet to be created by ANY sender node - common to all
 	public:
-		char getType()const{return 'S';}
 		SourceNode(unsigned int sourceID, unsigned int arrival_time, unsigned int nPackets, SIZE pkt_size, Node** SR, unsigned int SR_length);
 		bool update();	//override Node's update function
 };

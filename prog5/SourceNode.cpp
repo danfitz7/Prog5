@@ -23,16 +23,6 @@ SourceNode::SourceNode(unsigned int newID, unsigned int arrival_time, unsigned i
 	SR[SR_length-1]=this;	//the last elt should be a pointer to the original sender (us), but we obviously can't have been initialized yet because this is our constructor, so make the last elt our pointer to complete the list
 
 	placeRandomly(0);
-	
-	/*if (DEBUG){
-		cout<<"\t\tNew Source Node ID "<<this<<" arrival= "<<arrivalTime<<" nPackets="<<nPackets<<" pksSize="<<pktSize<<endl;
-		cout<<" SR["<<SR_length<<"]={";
-		for (unsigned int nodeIndex=0;nodeIndex< SR_length; nodeIndex++){
-			cout<<SR[nodeIndex]<<", ";
-		}
-		cout<<"}";
-	}*/
-	//TODO: init position so it's in a random unoccupied field space
 }
 
 bool SourceNode::update(){

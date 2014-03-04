@@ -19,7 +19,7 @@ enum SIZE {SMALL=0, MEDIUM=1, LARGE=2};
 ostream& operator<<(ostream& os, const SIZE& size);
 
 class Packet {
-	friend ostream& operator<<(ostream& os, const Packet& packet);
+	friend ostream& operator<<(ostream& os, Packet packet);
 	friend ostream& operator<<(ostream& os, const Packet* const packet);
 private:
 	unsigned int ID; 				//ID of packet
@@ -33,9 +33,12 @@ public:
 	Packet(LinkedList<Node*> rout, int newID, int time); //constructor
 	unsigned int getID() { return ID; } 							//returns ID
 	Node* popNextNodeOnRout() { return routQueue.pop(); }//pops the next node* off the rout queue and returns it
+	Node* getNextNodeOnRout() {return routQueue.peek();}//returns (but does not pop) the first node* on the rout queue
 	SIZE getSize(){return size;}						//returns the size of the packet
 	unsigned int getSentTime() { return sentTime; } 				//returns arrivalTime
 	unsigned int getReceivedTime() { return receivedTime; } 		//returns arrivalTime
+	void setReceivedTime(unsigned int rTime){receivedTime=rTime;}	//set the tie this packet was received at it's final destination
+	unsigned int getResponseTime(){return (receivedTime-sentTime);}	//get the response time NOTE: received time better be set and after sent time!
 };
 
 

@@ -89,7 +89,7 @@ int main(int argc, char* argv[]){
 	//unsigned int lastReceiverIndex=nSources+nMules+nReceivers;
 	if (DEBUG) cout<<endl<<"\n\tInitializing "<<nReceivers<<" receiver nodes..."<<endl;
 	for (unsigned int receiverID=0;receiverID<nReceivers; receiverID++){
-		receiverNodePtrs[receiverID]=new ReceiverNode(newNodeID);
+		receiverNodePtrs[receiverID]=new ReceiverNode(newNodeID, nSources);
 		newNodeID++;
 	}
 	
@@ -130,28 +130,22 @@ int main(int argc, char* argv[]){
 				
 		//loop through nodeIDs of the routing list of each packet, adding them in reverse from the back of the array
 		if(DEBUG) cout<<"\tParsing Routing Nodes of Packet: ";
-		unsigned int routingNodeIndexArray[SR_size];//= new unsigned int[SR_size];
+		Node** sourceRoute = new Node*[SR_size];
 		for (unsigned int routNode=0; routNode<SR_size;routNode++){
 			ss>>nodeID;
 			if(DEBUG)cout<<nodeID<<" ";
-			routingNodeIndexArray[routNode]=nodeID-1;
+			nodeID--;	//convert 1 base to 0 bases indexing
+			sourceRoute[routNode]=getPtrOfNode(nodeID);
 		}
 		if(DEBUG) cout<<endl;
 		
-		if (DEBUG) cout<<"\tPushing on the array in reverse order: ";
-		Node** sourceRoute = new Node*[SR_size];
-		unsigned int lastNodeArrayIndex=SR_size-1;
-		for (int routNode=lastNodeArrayIndex; routNode>=0;routNode--){
-			unsigned int sourceNodeID=routingNodeIndexArray[routNode];
-			if (DEBUG) cout<<sourceNodeID+1<<", ";
-			sourceRoute[lastNodeArrayIndex-routNode]=getPtrOfNode(sourceNodeID);
-		}
-		if (DEBUG) cout<<endl;
+		
+		//TODO: get rid of self at head of queue?
+		//better for nodes to pop themselves off the queue and peak at the next node on the queue, or pop the next node off and lose the source by the end?
 		
 		//init each source node
 		if(DEBUG)cout<<"\tMaking Source Node "<<sourceID+1<<"..."<<endl;
 		sourceNodePtrs[sourceID]=new SourceNode(sourceID, arrival_time, nPackets, pktSize, sourceRoute, SR_size);	//note this uses the sourceID provided by the command line, NOT the one we're looping through. We trust the testing data
-		//if(DEBUG)cout<<"\t...done"<<endl;
 		if (!sourceNodePtrs[sourceID]){
 			cout<<"ERROR: Source Node creation failed!"<<endl;
 		}

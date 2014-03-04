@@ -12,11 +12,11 @@ class ReceiverNode: public Node {
 	
 	private:
 		LinkedList<Packet*> receiverPackets;	//the Source Routing List of each packet this source node will send
-		void finishPacket(Packet* packetPtr);	//gets data on a received packet instead of sending it out again like other nodes			
+		void finishPacket(Packet* packetPtr);
 		Info* infoList;
 	public:
-		ReceiverNode(unsigned int newID, unsigned int nSources);
 		char getType(){return 'R';}
+		ReceiverNode(unsigned int sourceID, unsigned int nSources);
 };
 
 #endif

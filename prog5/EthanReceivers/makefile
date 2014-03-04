@@ -33,10 +33,10 @@ MuleNode.o: MuleNode.cpp MuleNode.h Node.h Position.h prog5.h
 SourceNode.o: SourceNode.cpp SourceNode.h Node.h Position.h prog5.h
 	g++ -Wall -c SourceNode.cpp -I.	
 
-ReceiverNode.o: ReceiverNode.cpp ReceiverNode.h Node.h Position.h Info.h prog5.h
+ReceiverNode.o: ReceiverNode.cpp ReceiverNode.h Node.h Position.h prog5.h
 	g++ -Wall -c ReceiverNode.cpp -I.
 
-Info.o: Info.cpp Info.h
+Info.o: Info.cpp
 	g++ -Wall -c Info.cpp -I.
 	
 clean:

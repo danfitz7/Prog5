@@ -41,16 +41,15 @@ Packet::Packet(LinkedList<Node*> ROUT, int newID, int time):
 {}
 
 //overload the stream output operator so we can easily print packets.
-ostream& operator<<(ostream& os, const Packet& packet){
-	os<< "Packet " << packet.ID << endl;
-	os<<"\tsent time: "<< packet.sentTime<<endl;
+ostream& operator<<(ostream& os, Packet packet){
+	os<< "Packet{" << packet.ID << " from "<<packet.originNodePtr<< " at t="<<packet.sentTime<<" to next node "<<packet.routQueue.peek()<<"}"<<endl;
 	return os;
 }
 
 //overload the stream output operator so we can easily print packets pointers.
 ostream& operator<<(ostream& os, const Packet* const packetPtr){
 	if (packetPtr){
-		os << "PktPtr: {"<<*packetPtr<<"}";
+		os << "*"<<*packetPtr;
 	}else{
 		os<<"UNINITIALIZED PACKET";
 	}
