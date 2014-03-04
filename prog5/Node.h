@@ -17,10 +17,6 @@ protected:
 	Position pos;
 	LinkedList<Event> eventList; 	  //sorted event queue
 	LinkedList<Packet*>* packetQueues; //Array of queues of packets to rout to their destinations (three queues in this array: small medium and large)
-	
-	int tranTime;
-	int propTime;
-	
 	unsigned int currentLength;
 	unsigned int longestQueueLength; //longest ever length of Node's queue
 	
@@ -40,10 +36,10 @@ protected:
 	void placeRandomly(unsigned int minCol, unsigned int maxCol);		//place this node randomly on the field in a column such that minCol<=col<maxCol
 	void placeRandomly(unsigned int row);
 	unsigned int calcPropagationTimeTo(Node* otherNode);
-
+	
 public:
 	Node(unsigned int newID, char newType); //constructor
-	
+	void print();
 	char getType() const {return type;}	//gets the type of the node
 	int getID() { return ID; }
 	int getLongestQueueLength() { return longestQueueLength; } //returns max Node length

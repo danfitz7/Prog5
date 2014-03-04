@@ -1,4 +1,5 @@
 //Daniel Fitzgerald
+//Ethan Coeytaux
 
 #include "prog5.h"
 #include <iostream>
@@ -12,10 +13,6 @@ MuleNode::MuleNode(unsigned int  newID):
 	dir((Direction)(newID%4))
 {
 	placeRandomly(1, field.getLength()-1);
-}
-
-void MuleNode::print(){
-	cout<<"Mule Node "<<ID<<" dir= "<<dir<<"."<<endl; 
 }
 
 void MuleNode::hop(){

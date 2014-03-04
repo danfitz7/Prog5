@@ -1,4 +1,5 @@
 //Daniel Fitzgerald
+//Ethan Coeytaux
 
 #include "prog5.h"
 #include <iostream>
@@ -17,29 +18,30 @@ SourceNode::SourceNode(unsigned int newID, unsigned int arrival_time, unsigned i
 	SR_length(routLength)
 {
 	//copy the SourceRoutArray
-	for (int srIndex = routLength-2;srIndex>=0;srIndex--){
+	for (int srIndex = routLength-1;srIndex>=0;srIndex--){
 		SR[srIndex]=SourceRoutArray[srIndex];
 	}
-	SR[SR_length-1]=this;	//the last elt should be a pointer to the original sender (us), but we obviously can't have been initialized yet because this is our constructor, so make the last elt our pointer to complete the list
+	SR[0]=this;	//the last elt should be a pointer to the original sender (us), but we obviously can't have been initialized yet because this is our constructor, so make the last elt our pointer to complete the list
 
 	placeRandomly(0);
 }
 
 bool SourceNode::update(){
-	if (DEBUG)cout<<"\tSource Node "<<ID+1<<" updating..."<<endl;
+	if (DEBUG)cout<<"\tSource Node "<<this<<" updating..."<<endl;
 	
 	bool stillUpdating=false;
 	
-	//process events and packets like a normal node (although no one should be sending us packets)
-	stillUpdating|=checkEvents();
-	stillUpdating|=checkPacketQueues();
-	
-	//now to send packets
+	//send packets if we aren't busy
 	if (nPackets>0){//if we still have packets left to send
 		if (!busy){	//if we're not already transmitting a packet
 			sendNextPacket();
 		}
 	}
+	
+	//process events and packets like a normal node (although no one should be sending us packets)
+	stillUpdating|=checkEvents();
+	stillUpdating|=checkPacketQueues();
+	
 	return stillUpdating;
 }
 
@@ -47,19 +49,25 @@ bool SourceNode::update(){
 unsigned int SourceNode::nextPacketID=0;
 void SourceNode::sendNextPacket(){
 	if (simTime>=arrivalTime){	//make sure we don't start sending packets before we arrive on the scene
-		if (DEBUG) cout << "\tSource "<<ID << " sending new packet "<<nextPacketID<<" at time "<<simTime<<endl;
+		if (DEBUG) cout << "\t\tSource "<<ID+1<< " making new packet "<<nextPacketID<<" to to "<<SR[1]<<" at time "<<simTime<<"..."<<endl;
 
 		nPackets--;	//one less left to send
 		
+		/*
 		//make the packet's Routing Queue (just copy our array)
-		LinkedList<Node*> Q = LinkedList<Node*>();
-		for (unsigned int SRnodeIndex=0;SRnodeIndex<SR_length;SRnodeIndex++){
-			Q.push(SR[SRnodeIndex]);
+		LinkedList<Node*>* Q = new LinkedList<Node*>();
+		for (int SRnodeIndex=SR_length-1;SRnodeIndex>=0;SRnodeIndex--){
+			Q->push(SR[SRnodeIndex]);
 		}
-
-		Packet* newPacketPtr = new Packet(nextPacketID, pktSize, simTime, this, Q);
-		
-		addEvent(Event(simTime+tranTime, newPacketPtr, TRANSMITTED));	//start processing this packet. next time we deal with it it will be transmitted
+		//if (DEBUG) cout << "\t\t\tMade routing list..."<<endl;
+		*/
+		Packet* newPacketPtr = new Packet(nextPacketID, pktSize, simTime, this, SR, SR_length/* *Q*/);
+		if (DEBUG) cout << "\t\t\tMade packet "<<*newPacketPtr<<endl;
+		if (DEBUG) cout<< "\t\t\tNext node should have been "<<SR[0]<<endl;
+		Event newEvent = Event(simTime+newPacketPtr->getTransTime(), newPacketPtr, TRANSMITTED);
+		if(DEBUG) cout<<"\t\t\tMade new event "<<newEvent<<endl;
+		addEvent(newEvent);	//start processing this packet. next time we deal with it it will be transmitted
+		if (DEBUG) cout << "\t\tPacket transmission added to event list."<<endl;
 		
 		nextPacketID++;
 	}

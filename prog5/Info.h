@@ -7,13 +7,16 @@
 
 class Info{
 	private:
-		int totalPackets;
+		unsigned int senderID;
+		unsigned int totalPackets;
 		std::vector<int> responseTimes;
 	public:
 		Info();
 		void addPacket(int responseTime);
-		int getAverageResponseTime();
-		int getVariance();
+		void setSenderID(int newID);
+		int getSenderID() {return senderID;}
+		double getAverageResponseTime();
+		double getVariance();
 };
 
 #endif

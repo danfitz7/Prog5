@@ -47,7 +47,7 @@ template<class data_t> class ListNode{
 		ListNode* getNextPtr(){return nextPtr;}			//get a pointer to the next node in the list
 		data_t getData(){return data;}					//get this node's data
 		
-		~ListNode(){delete(nextPtr);};					//destructor prototype
+		//~ListNode(){delete(nextPtr);};					//destructor prototype
 };
 
 #endif

@@ -1,4 +1,5 @@
 //Daniel Fitzgerald
+//Ethan Coeytaux
 
 #include <cmath>
 

@@ -12,6 +12,7 @@ class MuleNode: public Node {
 	public:
 		MuleNode(unsigned int  newID);
 		void hop();
+		void print();
 };
 
 #endif

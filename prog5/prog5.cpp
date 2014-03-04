@@ -8,6 +8,11 @@ A Simulation of MANET Source Routing in C++
 #include "prog5.h"
 
 //used for input and string manipulation
+//Daniel Fitzgerald
+
+// ./lab5 20 12 16 20 < prog5.txt
+
+
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -30,6 +35,7 @@ Grid field = Grid();
 
 //function prototypes
 void testAll();
+void testNodePointerInheritence();
 Node* getPtrOfNode(unsigned int index);
 
 unsigned int nSources; //the number of lines should be the second argument
@@ -45,6 +51,9 @@ Event-Driven simulation of MANET nodes
 */
 int main(int argc, char* argv[]){
 	if(DEBUG){cout<<endl<<"PROG5\nProcessing "<<argc<<" inputs..."<<endl;}
+	
+	testNodePointerInheritence();
+	
 	
 	//ensure there is the correct number of command line arguments (the first is the name of our program, the second should be the number of arguments to come from a file)
 	if (argc<5){
@@ -126,7 +135,7 @@ int main(int argc, char* argv[]){
 		
 		//LinkedList<Node*> packetRoutingQueue=LinkedList<Node*>();	//Source routing Queue of each packet
 		
-		if(DEBUG) cout<<"\tSource Node ID "<<sourceID+1<<" arrived at time "<<arrival_time<<" and has "<<nPackets<<" packets if size "<<pktSize<<" to send through a rout of "<<SR_size<<" nodes."<<endl;
+		if(DEBUG) cout<<"\tSource Node ID "<<sourceID+1<<" arrived at time "<<arrival_time<<" and has "<<nPackets<<" packets of size "<<pktSize<<" to send through a rout of "<<SR_size<<" nodes."<<endl;
 				
 		//loop through nodeIDs of the routing list of each packet, adding them in reverse from the back of the array
 		if(DEBUG) cout<<"\tParsing Routing Nodes of Packet: ";
@@ -161,9 +170,11 @@ int main(int argc, char* argv[]){
 	
 	bool anythingUpdated=true;
 	while(anythingUpdated){
-		if (DEBUG)cout<<"Sim Time " << simTime<<"."<<endl;
+		//if (DEBUG)cout<<"Sim Time " << simTime<<"."<<endl;
 
-		if (simTime%1000==0) field.print();
+		if (simTime%100==0) field.print();
+		
+		
 		
 		anythingUpdated=false;//reset every timestep
 		
@@ -181,9 +192,10 @@ int main(int argc, char* argv[]){
 			anythingUpdated|=receiverNodePtrs[receiverIndex]->update();
 		}
 		
+		
 		//after every 10 seconds (100 100ms units) update the mule
 		if (simTime%100==0){
-			if (DEBUG)cout<<endl<<"HOPPING MULES"<<endl;
+			if (DEBUG)cout<<endl<<"HOPPING MULES at time "<<simTime<<endl<<endl;
 			for (unsigned int muleIndex=0;muleIndex<nMules;muleIndex++){
 				anythingUpdated=true;
 				muleNodePtrs[muleIndex]->hop();
@@ -212,7 +224,18 @@ Node* getPtrOfNode(unsigned int index){
 	}
 }
 
+
+void testNodePointerInheritence(){
+	cout<<endl<<"Testing Node inheritance."<<endl;
+	field.setSize(10);
+	Node* testNode = new MuleNode(8);
+	((MuleNode*)testNode)->print();
+	testNode->print();
+	cout<<"Done testing inheritance."<<endl<<endl;;
+}
+
 //test all functionality of base components
 void testAll(){
 	//LinkedList<int>::testLinkedLists();
+	testNodePointerInheritence();
 }

@@ -8,6 +8,7 @@
 #include <iostream>
 #include "Packet.h"
 #include "Position.h"
+#include "SourceNode.h"
 #include "Node.h"
 #include "Event.h"
 
@@ -23,12 +24,14 @@ Node::Node(unsigned int  newID, char newType):
 	pos(Position()),								//position of his node on the field
 	eventList(LinkedList<Event>()),
 	packetQueues(new LinkedList<Packet*>[3]),	//small, medium, and large packet queues in an array of queues
-	tranTime(0),
-	propTime(0),
 	busy(false),
 	type(newType)
 {
 	if(DEBUG)cout<<"\t\tNode "<<ID+1<<" initialized."<<endl;
+}
+
+void Node::print(){
+	cout<<"Node "<<ID<<"."<<endl;
 }
 
 void Node::place(Position p){
@@ -99,7 +102,7 @@ void Node::processPacket(Packet* packetPtr){
 
 //processes the given event
 void Node::processEvent(Event event){
-	if (DEBUG) cout<<"\tNode "<<ID+1<<" checking event list..."<<endl;
+	if (DEBUG) cout<<"\tNode "<<ID+1<<" processing event " <<event<<"..."<<endl;
 	EVENT_TYPE type = event.getType();
 	Packet* thePacket=event.getPacket();
 	switch(type){
@@ -142,7 +145,7 @@ bool Node::checkPacketQueues(){
 			if (packetQueues[priorityQueueIndex].isNotEmpty()){
 				stillUpdating=true;	//there's still packets to process
 				Packet* nextPacketToSendPtr = packetQueues[priorityQueueIndex].pop();	//pop the packet off the queue
-				addEvent(Event(simTime+tranTime, nextPacketToSendPtr, TRANSMITTED));	//start processing this packet
+				addEvent(Event(simTime+nextPacketToSendPtr->getTransTime(), nextPacketToSendPtr, TRANSMITTED));	//start processing this packet
 				busy=true;
 				break;	//don't keep popping from any more of our priority queues
 			}
@@ -160,50 +163,6 @@ bool Node::update(){ //updates Node, returns if Node is empty
 	stillUpdating|=checkPacketQueues();
 	
 	return stillUpdating;
-	
-	/*
-	bool packetToProcess = false;
-	Packet* sPacket;
-	if (packetQueues[0].isNotEmpty())
-	{
-		packetToProcess = true;
-		sPacket = packetQueues[0].pop();
-	}
-	else if (packetQueues[1].isNotEmpty())
-	{
-		packetToProcess = true;
-		sPacket = packetQueues[1].pop();
-	}
-	else if (packetQueues[2].isNotEmpty())
-	{
-		packetToProcess = true;
-		sPacket = packetQueues[2].pop();
-	}
-	if ((packetToProcess)// && (internalTime != time))
-	{
-		//internalTime++;
-		if (propTime) propTime--;
-		else if (tranTime) tranTime--;
-		else
-		{
-			int currentQueue = sPacket->getSize();
-			Node* nextNode = sPacket->popRout();
-			if (nextNode) nextNode->receivePacket(sPacket);
-			sPacket = packetQueues[currentQueue].pop();
-			while ((!sPacket) && (currentQueue < 3))
-			{
-				sPacket = packetQueues[currentQueue].pop();
-				currentQueue++;
-			}
-			if (sPacket)
-			{
-				tranTime = sPacket->getSize();
-				propTime = ceil(log2(pos.distanceFrom(nextNode->pos)))-1;//ceil(log2(sqrt(pow(pos.getX() - sPacket->routQueue.firstElement()->getPos().getX(), 2) + pow(pos.getY() - sPacket->routQueue.firstElement()->getPos().getY(), 2)))) - 1;
-			}
-		}
-		return true;
-	}
-	else return false;*/
 
 } //end update function
 

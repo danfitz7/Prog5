@@ -6,8 +6,12 @@
 #include "Packet.h"
 
 enum EVENT_TYPE {ARRIVAL=0, TRANSMITTED=1};
+ostream& operator<<(ostream& os, const EVENT_TYPE& type);
 
 class Event{
+	friend ostream& operator<<(ostream& os, const Event& event);
+	friend ostream& operator<<(ostream& os, const Event* const eventPtr);
+	
 	private:
 		unsigned int time;
 		Packet* packetPtr;

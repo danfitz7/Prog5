@@ -1,4 +1,5 @@
 //Daniel Fitzgerald
+//Ethan Coeytaux
 
 #ifndef RECEIVERNODE_H
 #define RECEIVERNODE_H
@@ -14,9 +15,11 @@ class ReceiverNode: public Node {
 		LinkedList<Packet*> receiverPackets;	//the Source Routing List of each packet this source node will send
 		void finishPacket(Packet* packetPtr);	//gets data on a received packet instead of sending it out again like other nodes			
 		Info* infoList;
+		int infoListLength;
 	public:
 		ReceiverNode(unsigned int newID, unsigned int nSources);
 		char getType(){return 'R';}
+		void printInfo();
 };
 
 #endif

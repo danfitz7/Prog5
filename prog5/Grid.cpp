@@ -56,35 +56,27 @@ Position Grid::getUnoccupiedPosition(int col){
 
 void Grid::print()
 {
-	cout << "--------------------------------------------------------------------------------------------------------------------" << endl;
 	int i, j;
+	for (i = 0; i < length; i++)
+	{
+		cout << "---";
+	}
+	cout << "--" << endl;
 	for (i = 0; i < height; i++)
 	{
 		cout << "|";
 		for (j = 0; j < length; j++)
 		{
 			int index=(i * length) + j;
-			if (field[index]) cout << " " << ((field[index]->getID() >= 9) ? "" : " ") << *field[index];
+			if (field[index]) cout << ((field[index]->getID() >= 9) ? "" : " ") << *field[index];
 			else cout << "   ";
 		}
 		cout << "|" << endl;
 	}
-	cout << "--------------------------------------------------------------------------------------------------------------------" << endl;
+	for (i = 0; i < length; i++)
+	{
+		cout << "---";
+	}
+	cout << "--" << endl;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
