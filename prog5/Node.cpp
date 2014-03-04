@@ -66,7 +66,7 @@ void Node::addEvent(Event event){
 }
 
 //add this packet to one of our queues
-void Node::addPacket(Packet* newPacket){
+void Node::receivePacket(Packet* newPacket){
 	packetQueues[newPacket->getSize()].insert(newPacket);
 	currentLength++;
 	if (currentLength>longestQueueLength){
@@ -102,13 +102,13 @@ void Node::processPacket(Packet* packetPtr){
 
 //processes the given event
 void Node::processEvent(Event event){
-	if (DEBUG) cout<<"\tNode "<<ID+1<<" processing event " <<event<<"..."<<endl;
+	if (DEBUG) cout<<"\t\tNode "<<ID+1<<" processing event " <<event<<"..."<<endl;
 	EVENT_TYPE type = event.getType();
 	Packet* thePacket=event.getPacket();
 	switch(type){
 		case ARRIVAL:	//a new packet has arrived - add it to our queue
-			if (DEBUG) cout<<"\t\tPacket "<<thePacket->getID()<<" arrived- adding to queue."<<endl;
-			addPacket(thePacket);
+			if (DEBUG) cout<<"\t\tPacket "<<thePacket->getID()<<" arrived - adding to queue."<<endl;
+			receivePacket(thePacket);
 			break;
 		case TRANSMITTED:	//a packet finished transmitting within this node - send it out
 			if (DEBUG) cout<<"\t\tPacket "<<thePacket->getID()<<" finished transmitting - sending to next Node."<<endl;
@@ -136,20 +136,24 @@ bool Node::checkEvents(){
 }
 
 bool Node::checkPacketQueues(){
-	if (DEBUG) cout<<"\t\tNode "<<ID+1<<" checking packet queues..."<<endl;
 	bool stillUpdating=false;
 	//check if there's anything in our priority queues, smallest first
 	if (!busy){	//if we're not busy already processing (transmitting) a packet
+		if (DEBUG) cout<<"\t\tNode "<<ID+1<<" checking packet queues..."<<endl;
 		unsigned int priorityQueueIndex;
 		for (priorityQueueIndex=0; priorityQueueIndex<3; priorityQueueIndex++){
 			if (packetQueues[priorityQueueIndex].isNotEmpty()){
-				stillUpdating=true;	//there's still packets to process
+				stillUpdating=true;	//there's still atleast one packet to process
+				
+				//process the next packet from the most prioritized non-empty queue
 				Packet* nextPacketToSendPtr = packetQueues[priorityQueueIndex].pop();	//pop the packet off the queue
 				addEvent(Event(simTime+nextPacketToSendPtr->getTransTime(), nextPacketToSendPtr, TRANSMITTED));	//start processing this packet
 				busy=true;
 				break;	//don't keep popping from any more of our priority queues
 			}
 		}
+	}else{
+		if (DEBUG) cout<<"BUSY"<<endl;
 	}
 	return stillUpdating;
 }

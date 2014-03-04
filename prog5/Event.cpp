@@ -12,6 +12,15 @@ Event::Event(unsigned int TIME, Packet* pktPtr, EVENT_TYPE evntType):
 	type(evntType)
 {}
 
+bool Event::operator<(Event other){
+	if (time<other.time){
+		return true;
+	}else if (time == other.time){	//if two events arrive at the same time
+		return ((int)type > (int)other.type);//this a TRANSMITTED and other is an ARRIVAL - finish transmitting events before getting new arrival events
+	}
+	return false;
+}
+
 ostream& operator<<(ostream& os, const EVENT_TYPE& type){
 	switch(type){
 		case ARRIVAL:

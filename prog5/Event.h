@@ -22,7 +22,7 @@ class Event{
 		unsigned int getTime(){return time;}
 		Packet* getPacket(){return packetPtr;}
 		EVENT_TYPE getType(){return type;}
-		bool operator<(Event other){return time<other.time;}
+		bool operator<(Event other);
 };
 
 #endif

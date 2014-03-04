@@ -22,8 +22,21 @@ ostream& operator<<(ostream& os, const ReceiverNode& rcvrNode){
 	return os;	
 }
 
-void ReceiverNode::finishPacket(Packet* packetPtr){
-	cout<<"Receiver Node "<<this<<" got packet "<<packetPtr<<endl;
+bool ReceiverNode::update(){ //updates Node, returns if Node is empty
+	if (DEBUG) cout<<"\tNode "<<ID+1<<" updating..."<<endl;
+	bool stillUpdating=false;	//flag to see if we updated ourselves or know we will again
+	
+	stillUpdating|=checkEvents();
+	
+	//receivers don't need packet queues - they don't transmit anything.
+	//stillUpdating|=checkPacketQueues();
+	
+	return stillUpdating;
+
+} //end update function
+
+void ReceiverNode::receivePacket(Packet* packetPtr){
+	cout<<"\tReceiver Node "<<this<<" got packet "<<packetPtr<<endl;
 	Node* intendedRecipient = packetPtr->popNextNodeOnRout();	//pop the next node off the packet's source routing queue
 	if (intendedRecipient != this){
 		cout<<"ERROR: Packet was not sent to correct node! Packet "<<packetPtr<<" sent to "<<this<<" instead of "<<intendedRecipient<<endl;

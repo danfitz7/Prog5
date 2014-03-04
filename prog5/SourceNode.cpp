@@ -49,25 +49,17 @@ bool SourceNode::update(){
 unsigned int SourceNode::nextPacketID=0;
 void SourceNode::sendNextPacket(){
 	if (simTime>=arrivalTime){	//make sure we don't start sending packets before we arrive on the scene
-		if (DEBUG) cout << "\t\tSource "<<ID+1<< " making new packet "<<nextPacketID<<" to to "<<SR[1]<<" at time "<<simTime<<"..."<<endl;
+		if (DEBUG) cout << "\t\tSource "<<ID+1<< " making new packet "<<nextPacketID<<" to "<<SR[1]<<" at time "<<simTime<<"..."<<endl;
 
 		nPackets--;	//one less left to send
 		
-		/*
-		//make the packet's Routing Queue (just copy our array)
-		LinkedList<Node*>* Q = new LinkedList<Node*>();
-		for (int SRnodeIndex=SR_length-1;SRnodeIndex>=0;SRnodeIndex--){
-			Q->push(SR[SRnodeIndex]);
-		}
-		//if (DEBUG) cout << "\t\t\tMade routing list..."<<endl;
-		*/
-		Packet* newPacketPtr = new Packet(nextPacketID, pktSize, simTime, this, SR, SR_length/* *Q*/);
-		if (DEBUG) cout << "\t\t\tMade packet "<<*newPacketPtr<<endl;
-		if (DEBUG) cout<< "\t\t\tNext node should have been "<<SR[0]<<endl;
+		Packet* newPacketPtr = new Packet(nextPacketID, pktSize, simTime, /*this,*/ SR, SR_length/* *Q*/);
+		//if (DEBUG) cout << "\t\t\tMade packet "<<*newPacketPtr<<endl;
+		//if (DEBUG) cout<< "\t\t\tNext node should have been "<<SR[0]<<endl;
 		Event newEvent = Event(simTime+newPacketPtr->getTransTime(), newPacketPtr, TRANSMITTED);
-		if(DEBUG) cout<<"\t\t\tMade new event "<<newEvent<<endl;
+		//if(DEBUG) cout<<"\t\t\tMade new event "<<newEvent<<endl;
 		addEvent(newEvent);	//start processing this packet. next time we deal with it it will be transmitted
-		if (DEBUG) cout << "\t\tPacket transmission added to event list."<<endl;
+		if (DEBUG) cout << "\t\tAdded event to my own list: "<<newEvent<<endl;
 		
 		nextPacketID++;
 	}
