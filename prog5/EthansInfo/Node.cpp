@@ -1,4 +1,5 @@
 //Daniel Fitzgerald
+//Ethan Coeytaux
 
 //debug flag and global vars
 #include "prog5.h"
@@ -17,7 +18,6 @@ using namespace std;
 #include "Grid.h"
 extern unsigned int simTime;
 extern Grid field;
-extern unsigned int totalEvents;
 
 //constructor
 Node::Node(unsigned int  newID, char newType):
@@ -61,26 +61,22 @@ void Node::placeRandomly(unsigned int col){
 
 //add this event to the event queue, or deal with it if it's happening right now
 void Node::addEvent(Event event){
-	if (event.getTime() > simTime){
-		eventList.insert(event);
-	}else{
-		if (event.getTime()<simTime){
-			if (DEBUG) cout<<"ERROR: adding event from the past: "<<event<<endl;
-		}
+	if (event.getTime() == simTime){
 		processEvent(event);
+	}else if (event.getTime()<simTime){
+		if (DEBUG) cout<<"ERROR: adding event from the past: "<<event<<endl;
+		processEvent(event);
+	}else{
+		eventList.insert(event);
 	}
 }
 
 //add this packet to one the appropriate priority queue
 void Node::receivePacket(Packet* newPacket){
-	if (type == 'R'){
-		((ReceiverNode*)this)->receivePacket(newPacket);			//receive packets as a ReceiverNode
-	}else{
-		packetQueues[newPacket->getSize()].insert(newPacket);
-		currentLength++;
-		if (currentLength>longestQueueLength){
-			longestQueueLength=currentLength;
-		}
+	packetQueues[newPacket->getSize()].insert(newPacket);
+	currentLength++;
+	if (currentLength>longestQueueLength){
+		longestQueueLength=currentLength;
 	}
 }	
 
@@ -104,7 +100,13 @@ void Node::processPacket(Packet* packetPtr){
 	if (nextNodePtr){
 		unsigned int estimatedArrivalTime = simTime+calcPropagationTimeTo(nextNodePtr);
 		Event newEvent=Event(estimatedArrivalTime, packetPtr, ARRIVAL);
-		nextNodePtr->addEvent(newEvent);
+		if (nextNodePtr->getType()!='R'){
+			if (DEBUG) cout<<"\t\tSending packet "<<packetPtr<<" to next mule node "<<nextNodePtr<<endl;
+			nextNodePtr->addEvent(newEvent);
+		}else{
+			if(DEBUG) cout<<"\t\tSending packet "<<packetPtr<<" to final destination Receiver "<<(ReceiverNode*)nextNodePtr<<endl;
+			((ReceiverNode*)nextNodePtr)->addEvent(newEvent);
+		}
 	}else{
 		finishPacket(packetPtr);
 	}
@@ -113,26 +115,27 @@ void Node::processPacket(Packet* packetPtr){
 //processes the given event
 void Node::processEvent(Event event){
 	//if this node is a receiver, process as a receiver, otherwise
-	if (DEBUG) cout<<"\t\tNode "<<this<<" processing event " <<event<<"..."<<endl;
+	if (type == 'R'){
+		((ReceiverNode*)this)->processEvent(event);
+	}else{
 	
-	cout<<"Node "<<this<<" processing event " <<event<<endl;
-	totalEvents++;	//we processed another event. Add to the global count.
-	
-	EVENT_TYPE type = event.getType();
-	Packet* thePacket=event.getPacket();
-	switch(type){
-		case ARRIVAL:	//a new packet has arrived - add it to our queue
-			if (DEBUG)cout<<"\t\tPacket "<<thePacket->getID()<<" arrived - receiving..."<<endl;
-			receivePacket(thePacket);
-			break;
-		case TRANSMITTED:	//a packet finished transmitting within this node - send it out
-			if (DEBUG) cout<<"\t\tPacket "<<thePacket->getID()<<" finished transmitting - sending to next Node."<<endl;
-			processPacket(thePacket);
-			busy=false;	//we finished processing a packet! yay!
-			break;
-		default:
-			cout<<"ERROR: BAD EVENT TYPE: "<<type<<endl;
-			break;
+		if (DEBUG) cout<<"\t\tNode "<<this<<" processing event " <<event<<"..."<<endl;
+		EVENT_TYPE type = event.getType();
+		Packet* thePacket=event.getPacket();
+		switch(type){
+			case ARRIVAL:	//a new packet has arrived - add it to our queue
+				if (DEBUG) cout<<"\t\tPacket "<<thePacket->getID()<<" arrived - adding to queue."<<endl;
+				receivePacket(thePacket);
+				break;
+			case TRANSMITTED:	//a packet finished transmitting within this node - send it out
+				if (DEBUG) cout<<"\t\tPacket "<<thePacket->getID()<<" finished transmitting - sending to next Node."<<endl;
+				processPacket(thePacket);
+				busy=false;	//we finished processing a packet! yay!
+				break;
+			default:
+				cout<<"ERROR: BAD EVENT TYPE: "<<type<<endl;
+				break;
+		}
 	}
 }
 

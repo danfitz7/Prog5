@@ -56,7 +56,7 @@ Position Grid::getUnoccupiedPosition(int col){
 
 void Grid::print()
 {
-	cout<<"\nFIELD"<<endl;
+	//cout<<"FIELD"<<endl;
 	int i, j;
 	for (i = 0; i < length; i++)
 	{
@@ -78,6 +78,6 @@ void Grid::print()
 	{
 		cout << "---";
 	}
-	cout << "--\n\n" << endl;
+	cout << "--" << endl;
 }
 

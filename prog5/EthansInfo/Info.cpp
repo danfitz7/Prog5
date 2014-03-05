@@ -1,6 +1,5 @@
 //Ethan Coeytaux
 
-#include "prog5.h"
 #include "Info.h"
 #include <vector>
 #include <math.h>
@@ -51,7 +50,5 @@ void Info::print()
 		cout << "\t  Average response time of S" << senderID << ": " << getAverageResponseTime() << endl;
 		cout << "\t  Variance of S" << senderID << ": " << getVariance() << endl;
 		cout << endl;
-	}else{
-		if (DEBUG) cout<<"\t\tReceived no packets from source "<<senderID<<endl;
 	}
 }

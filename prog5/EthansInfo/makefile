@@ -5,6 +5,12 @@ prog5: prog5.o Position.o Node.o Packet.o MuleNode.o SourceNode.o Grid.o Event.o
 #Node.h Packet.h Grid.h prog5.h	
 prog5.o: prog5.cpp ListNode.h LinkedList.h Node.h MuleNode.h SourceNode.o ReceiverNode.o Event.o Grid.h Packet.h prog5.h Position.h
 	g++ -Wall -c prog5.cpp -I.
+
+#ListNode.o:	ListNode.cpp ListNode.h prog5.h
+#	g++ -Wall -c ListNode.cpp -I.
+	
+#LinkedList.o: LinkedList.cpp LinkedList.h ListNode.h Node.h prog5.h
+#	g++ -Wall -c LinkedList.cpp -I.	
 	
 Packet.o: Packet.cpp Packet.h LinkedList.h Node.h SourceNode.h prog5.h
 	g++ -Wall -c Packet.cpp -I.
@@ -30,7 +36,7 @@ SourceNode.o: SourceNode.cpp SourceNode.h Node.h Position.h prog5.h
 ReceiverNode.o: ReceiverNode.cpp ReceiverNode.h Node.h Position.h Info.h prog5.h
 	g++ -Wall -c ReceiverNode.cpp -I.
 
-Info.o: Info.cpp Info.h prog5.h
+Info.o: Info.cpp Info.h
 	g++ -Wall -c Info.cpp -I.
 	
 clean:
