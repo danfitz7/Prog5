@@ -53,7 +53,7 @@ void SourceNode::sendNextPacket(){
 
 		nPackets--;	//one less left to send
 		
-		Packet* newPacketPtr = new Packet(nextPacketID, pktSize, simTime, /*this,*/ SR, SR_length/* *Q*/);
+		Packet* newPacketPtr = new Packet(nextPacketID, pktSize, simTime, this, SR, SR_length/* *Q*/);
 		//if (DEBUG) cout << "\t\t\tMade packet "<<*newPacketPtr<<endl;
 		//if (DEBUG) cout<< "\t\t\tNext node should have been "<<SR[0]<<endl;
 		Event newEvent = Event(simTime+newPacketPtr->getTransTime(), newPacketPtr, TRANSMITTED);

@@ -25,13 +25,13 @@ private:
 	unsigned int ID; 				//ID of packet
 	SIZE size; 						//size of packet
 	LinkedList<Node*> routQueue;	//queue of the nodes in this packets rout - these are popped off as as each node passes on the packet
-	//SourceNode* originNodePtr;		//the original SourceNode of this packet
+	SourceNode* originNodePtr;		//the original SourceNode of this packet
 	const unsigned int sentTime;	//time atwhich the original sender first started processing this packet
 	unsigned int receivedTime;		//time atwhich the eventual final received received the packet
 public:
 	//Packet(unsigned int newID, SIZE size, int sent_time, SourceNode* sourcePtr, LinkedList<Node*> routQueue);
 	//Packet(LinkedList<Node*> rout, int newID, int time); //constructor
-	Packet(unsigned int newID, SIZE size, int sent_time, /*SourceNode* SOURCEPTR,*/ Node* sourceRoutArray[], unsigned int sourceRoutLength);
+	Packet(unsigned int newID, SIZE size, int sent_time, SourceNode* SOURCEPTR, Node* sourceRoutArray[], unsigned int sourceRoutLength);
 	
 	unsigned int getID() { return ID; } 							//returns ID
 	Node* popNextNodeOnRout() { return routQueue.pop(); }//pops the next node* off the rout queue and returns it
@@ -42,6 +42,7 @@ public:
 	unsigned int getReceivedTime() { return receivedTime; } 		//returns arrivalTime
 	void setReceivedTime(unsigned int rTime){receivedTime=rTime;}	//set the tie this packet was received at it's final destination
 	unsigned int getResponseTime(){return (receivedTime-sentTime);}	//get the response time NOTE: received time better be set and after sent time!
+	SourceNode* getOriginalSource(){return originNodePtr;}
 };
 
 

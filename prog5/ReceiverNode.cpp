@@ -5,6 +5,7 @@
 #include "ReceiverNode.h"
 #include "Node.h"
 #include "Position.h"
+#include "SourceNode.h"
 #include "Info.h"
 
 
@@ -23,7 +24,7 @@ ostream& operator<<(ostream& os, const ReceiverNode& rcvrNode){
 }
 
 bool ReceiverNode::update(){ //updates Node, returns if Node is empty
-	if (DEBUG) cout<<"\tNode "<<ID+1<<" updating..."<<endl;
+	if (DEBUG) cout<<"\tReceiver "<<ID+1<<" updating..."<<endl;
 	bool stillUpdating=false;	//flag to see if we updated ourselves or know we will again
 	
 	stillUpdating|=checkEvents();
@@ -45,9 +46,11 @@ void ReceiverNode::receivePacket(Packet* packetPtr){
 	if (!nextNodePtr){
 		if(DEBUG) cout<<"\t\tReceived packet "<<packetPtr<<" at final destination "<<this<<endl;
 		
+		SourceNode* packetSrc = packetPtr->getOriginalSource();
+
 		//add the packet to stats
 		packetPtr->setReceivedTime(simTime);
-		infoList[intendedRecipient->getID()].addPacket(packetPtr->getResponseTime());
+		infoList[packetSrc->getID()].addPacket(packetPtr->getResponseTime());
 	}else{
 		cout<<"ERROR: Receiver Node "<<this<<" received a packet that still has nodes on it's routing list: "<<packetPtr<<endl;
 	}
