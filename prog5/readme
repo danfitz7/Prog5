@@ -1,0 +1,54 @@
+Author:		Daniel Fitzgerald Ethan Coeytaux		
+Date:		3/5/2014		
+Version:			1.0
+Project ID:			prog5
+CS Class:			CS2303
+Programming Language:		C++
+OS/Hardware dependencies:	none
+				
+Problem Description:		A Simulation of MANET Source Routing
+
+Overall Design:				Main simulation loops through all nodes in the simulation, and exits when no node has anything to update.
+							
+	System structure		Each node has its own event list and prioritized packet queues and is responsible for updating itself.
+	Data representation		Event lists and packet queues use templated Linked Lists		
+
+Program Assumptions 
+      and Restrictions:		Assumes command line parameters are valid for the given input file.
+							(The number of source nodes in the file must be equal to that provided in the command line,
+							the field must be able to accommodate all nodes of all types.
+							
+
+Interfaces:				n/a
+
+Implementation Details:							
+	Data					Separate classes for every node type, derived from common Node class. Classes for packets, events, positions, statistical information, and the field.
+	Variables				Global field, total events, and simulation time.
+	Algorithm				Sorted queue pushing, popping, and insertion.
+
+How to build the program:	make
+
+Program Source:				
+
+Additional Files:			
+
+Results:					output.txt
+
+Test Procedures:			./prog5 20 12 16 36 <prog5.txt > output.txt
+Test Data:					prog5.txt
+							For VERBOSE debug, set DEBUG flag in prog5.h to 1.
+								
+Performance Evaluation:		n/a
+
+References:					none
+
+Other Comments:
+
+Simulation runs to completion, printing 
+Mule node hopping is functional.
+Templated LinkedLists work.
+Node events and packet transmissions work.
+Correct times for events in simulation are unverified.
+
+EXTRA CREDIT:
+Prioritized packet queues are implemented.
