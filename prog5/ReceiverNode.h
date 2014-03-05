@@ -19,10 +19,8 @@ class ReceiverNode: public Node {
 		ReceiverNode(unsigned int newID, unsigned int nSources);
 		char getType(){return 'R';}
 		void printInfo();
-		bool update();				//overridden from Node - receivers process events but not packet queues. Calls overridden processEvent()	
 
 		void receivePacket(Packet* packetPtr);	//overridden from Node - gets data on a received packet instead of sending it out again like other nodes			
-		void processEvent(Event event);			//override to call our own overridden receivePacket() function upon packet arrival
 };
 
 #endif

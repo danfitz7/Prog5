@@ -30,6 +30,7 @@ using namespace std;
 //global variables
 unsigned int simTime =0;
 Grid field = Grid();
+unsigned int totalEvents=0;
 
 //function prototypes
 void testAll();
@@ -183,8 +184,8 @@ int main(int argc, char* argv[]){
 			anythingUpdated|=receiverNodePtrs[receiverIndex]->update();
 		}
 		
-		//hope the mules after every 10 seconds (100 timestep units of 100ms each) 
-		if (simTime%100==0){
+		//hope the mules after every 1 seconds (10 timesteps units of 100ms each) 
+		if (simTime%10==0){
 			if (DEBUG)cout<<endl<<"\tHOPPING MULES at time "<<simTime<<endl<<endl;
 			for (unsigned int muleIndex=0;muleIndex<nMules;muleIndex++){
 				anythingUpdated=true;
@@ -195,6 +196,12 @@ int main(int argc, char* argv[]){
 		simTime++;//INCREMENT GLOBAL SIMTIME
 	}
 
+	cout<<"\n\n\nSIMULATION COMPLETED after time "<<simTime<<" and "<<totalEvents<<" events."<<endl;
+	cout<<"Statistics by receiver node:"<<endl;
+	/*for (unsigned int i=0;i<nReceivers;i++){
+		receiverNodePtrs[i]->printInfo();
+	}*/
+	
 	//simulation completion
 	cout<<"Done."<<endl;
 }

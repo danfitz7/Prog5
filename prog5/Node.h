@@ -12,7 +12,7 @@ class Node {
 	//friend the stream printing functions so they have access to private vars
 	friend ostream& operator<<(ostream& os, const Node& node);	
 	friend ostream& operator<<(ostream& os, const Node* node);
-
+	
 protected:
 	int ID;
 	Position pos;
@@ -44,10 +44,7 @@ public:
 	char getType() const {return type;}	//gets the type of the node
 	int getID() { return ID; }
 	int getLongestQueueLength() { return longestQueueLength; } //returns max Node length
-	
-	//int getPropTime() { return propTime; } //returns propTime
-	//int getTranTime() { return tranTime; } //returns tranTime
-		
+			
 	Position getPosition() { return pos; }
 
 	//MAIN UPDATE FUNCTION FOR ALL NODES

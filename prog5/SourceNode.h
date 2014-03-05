@@ -14,7 +14,7 @@ class SourceNode: public Node {
 		SIZE pktSize;				//the size of each packet
 		Node** SR;					//the Source Routing List (stored as array) of each packet this source node will send
 		unsigned int SR_length;		//number of packets on the rout (length of the SR array)
-		
+		bool isInSim;				//is the source node still in the simulation?
 		void sendNextPacket();		//generate new packets for the simulation.
 		
 		static unsigned int nextPacketID;//ID of the next packet to be created by ANY sender node - common to all Senders so all packets have unique IDs
