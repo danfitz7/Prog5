@@ -1,4 +1,3 @@
-//Ethan Coeytaux
 //Daniel Fitzgerald
 
 #include "prog5.h"
@@ -7,6 +6,7 @@
 #include "SourceNode.h"
 using namespace std;
 
+//print packet sizes for readability
 ostream& operator<<(ostream& os, const SIZE& size){
 	switch(size){
 		case SMALL:
@@ -29,7 +29,7 @@ Packet::Packet(unsigned int newID, SIZE size, int sent_time, SourceNode* SOURCEP
 	size(size),
 	originNodePtr(SOURCEPTR),
 	sentTime(sent_time),
-	receivedTime(0)
+	receivedTime(0)				//this should be set by the ReceiverNode when it finally receives the packet
 {
 	//if (DEBUG)cout<<"\t\t\tInitializing packet "<<ID<<"'s source rout queue ["<<sourceRoutLength<<"]..."<<endl;
 	//make the packet's Routing Queue (just copy our array)
@@ -40,26 +40,6 @@ Packet::Packet(unsigned int newID, SIZE size, int sent_time, SourceNode* SOURCEP
 		routQueue.push(sourceRoutArray[SRnodeIndex]);
 	}
 }
-
-/*
-Packet::Packet(unsigned int newID, SIZE size, int sent_time, SourceNode* SOURCEPTR, LinkedList<Node*> ROUTQ):
-	ID(newID),
-	size(size),
-	routQueue(ROUTQ),
-	originNodePtr(SOURCEPTR),
-	sentTime(sent_time),
-	receivedTime(0)
-{}
-
-
-//packet constructor
-Packet::Packet(LinkedList<Node*> ROUT, int newID, int time):
-	ID(newID),
-	size(SMALL),  //size always 1
-	routQueue(ROUT),
-	sentTime(time)
-{}
-*/
 
 //overload the stream output operator so we can easily print packets.
 ostream& operator<<(ostream& os, Packet packet){

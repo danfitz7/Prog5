@@ -1,5 +1,5 @@
-//Ethan Coeytaux
 //Daniel Fitzgerald
+//Ethan Coeytaux
 
 #ifndef NODE_H
 #define NODE_H
@@ -9,8 +9,9 @@
 #include "Position.h"
 
 class Node {
-	friend ostream& operator<<(ostream& os, const Node& node);	//make the stream printing function a friend so it has access to private vars
-	friend ostream& operator<<(ostream& os, const Node* node);	//make the stream printing function a friend so it has access to private vars
+	//friend the stream printing functions so they have access to private vars
+	friend ostream& operator<<(ostream& os, const Node& node);	
+	friend ostream& operator<<(ostream& os, const Node* node);
 
 protected:
 	int ID;
@@ -22,7 +23,7 @@ protected:
 	
 	//updating
 	void addEvent(Event newEvent);			//other node's can add events to our event list
-	void receivePacket(Packet*);				//we can add packets to our packet list
+	void receivePacket(Packet*);			//we can add packets to our packet list
 	void finishPacket(Packet* packetPtr);	//what we do with a packet when we receive it and it has nowhere more to go
 	void processPacket(Packet*);			//send a packet that still has some source rout nodes on it's queue
 	void processEvent(Event event);			//process an event
@@ -52,8 +53,5 @@ public:
 	//MAIN UPDATE FUNCTION FOR ALL NODES
 	bool update(); 
 };
-
-//overload so we can cout<< nodes
-//ostream& operator<<(ostream& os, const Node& node);
 
 #endif

@@ -1,4 +1,5 @@
 //Daniel Fitzgerald
+//Ethan Coeytaux
 
 #include "prog5.h"
 #include <iostream>
@@ -6,10 +7,10 @@
 #include "Node.h"
 #include "Position.h"
 
-
+//MuleNode extends Node to add hopping functionality. All basic packet handling is implemented in Node and does not need to be overridden here.
 MuleNode::MuleNode(unsigned int  newID):
-	Node(newID, 'M'),	//call constructor from superclass Node
-	dir((Direction)(newID%4))
+	Node(newID, 'M'),			//call constructor from superclass Node
+	dir((Direction)(newID%4))	//assign the four directions evenly among packets
 {
 	placeRandomly(1, field.getLength()-1);
 }
@@ -18,6 +19,7 @@ void MuleNode::print(){
 	cout<<"Mule Node "<<ID<<" dir= "<<dir<<"."<<endl; 
 }
 
+//hopping behavior from Smashball
 void MuleNode::hop(){
 	int height = field.getHeight(); //get height of field (vertical)
 	int length=field.getLength();	//get length of field (horizontal)

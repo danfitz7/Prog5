@@ -56,6 +56,7 @@ Position Grid::getUnoccupiedPosition(int col){
 
 void Grid::print()
 {
+	//cout<<"FIELD"<<endl;
 	int i, j;
 	for (i = 0; i < length; i++)
 	{

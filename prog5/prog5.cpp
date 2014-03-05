@@ -1,17 +1,15 @@
 /*
 CS 2302 Progam 5
+
 Daniel Fitzgerald
-A Simulation of MANET Source Routing in C++ 
+
+A Simulation of MANET Source Routing in C++
+
+Test on prog5.txt data with command ./lab5 20 12 16 20 < prog5.txt
 */
 
 //debug flag and global vars
 #include "prog5.h"
-
-//used for input and string manipulation
-//Daniel Fitzgerald
-
-// ./lab5 20 12 16 20 < prog5.txt
-
 
 #include <iostream>
 #include <string>
@@ -38,22 +36,19 @@ void testAll();
 void testNodePointerInheritence();
 Node* getPtrOfNode(unsigned int index);
 
-unsigned int nSources; //the number of lines should be the second argument
-unsigned int nReceivers; //the number of lines should be the second argument
-unsigned int nMules; 	//the number of lines should be the second argument
-unsigned int gridSize; 	//the number of lines should be the second argument
-SourceNode** sourceNodePtrs;
-MuleNode** muleNodePtrs;
-ReceiverNode** receiverNodePtrs;
+//Node arrays and lengths used for the simulation
+unsigned int nSources; 		//the number of lines should be the second argument
+unsigned int nReceivers; 	//the number of lines should be the second argument
+unsigned int nMules; 		//the number of lines should be the second argument
+unsigned int gridSize; 		//the number of lines should be the second argument
+SourceNode** sourceNodePtrs;	//array of pointers to all source nodes
+MuleNode** muleNodePtrs;		//array of pointers to all mules nodes
+ReceiverNode** receiverNodePtrs;//array of pointers to all receiver nodes
 
-/*
-Event-Driven simulation of MANET nodes
-*/
+
+//Event-Driven simulation of MANET nodes
 int main(int argc, char* argv[]){
 	if(DEBUG){cout<<endl<<"PROG5\nProcessing "<<argc<<" inputs..."<<endl;}
-	
-	testNodePointerInheritence();
-	
 	
 	//ensure there is the correct number of command line arguments (the first is the name of our program, the second should be the number of arguments to come from a file)
 	if (argc<5){
@@ -65,7 +60,6 @@ int main(int argc, char* argv[]){
 	srand (time(NULL));
 	
 	//input parsing
-	
 	//char* progString=argv[0];			//the first arg is always the name of the program
 	nSources	=atoi(argv[1]); 	//the number of lines should be the second argument
 	nReceivers	=atoi(argv[2]); 	//the number of lines should be the second argument
@@ -87,7 +81,6 @@ int main(int argc, char* argv[]){
 	unsigned int newNodeID=nSources;
 	
 	//init the mule nodes
-	//unsigned int lastMuleIndex=nSources+nMules;
 	if (DEBUG) cout<<endl<<"\n\tInitializing "<<nMules<<" mules nodes..."<<endl;
 	for (unsigned int muleID=0;muleID<nMules;muleID++){
 		muleNodePtrs[muleID]=new MuleNode(newNodeID);
@@ -95,7 +88,6 @@ int main(int argc, char* argv[]){
 	}
 	
 	//init the receiver nodes
-	//unsigned int lastReceiverIndex=nSources+nMules+nReceivers;
 	if (DEBUG) cout<<endl<<"\n\tInitializing "<<nReceivers<<" receiver nodes..."<<endl;
 	for (unsigned int receiverID=0;receiverID<nReceivers; receiverID++){
 		receiverNodePtrs[receiverID]=new ReceiverNode(newNodeID, nSources);
@@ -111,7 +103,7 @@ int main(int argc, char* argv[]){
 	//Init the source nodes by reading the input file
 	string strLine;
 	stringstream ss;
-	if (DEBUG)cout<<"Parsing Source Nodes..."<<endl;
+	if (DEBUG)cout<<"\nParsing Source Nodes..."<<endl;
 	//for (unsigned int sNode=0;sNode<nSources;sNode++){
 	unsigned int senderIndexCheck=0;
 	while (getline(cin,strLine)){
@@ -121,7 +113,7 @@ int main(int argc, char* argv[]){
 			break;
 		}
 		
-		if(DEBUG) cout<<"\n\n\tLine is "<<strLine<<endl;	//get each line, where a line represents one packet's information
+		if(DEBUG) cout<<"\n\tLine is "<<strLine<<endl;	//get each line, where a line represents one packet's information
 		ss.clear();
 		ss<<strLine;
 		
@@ -132,9 +124,7 @@ int main(int argc, char* argv[]){
 		ss>>iPkt_size;		//get the size of the packet
 		pktSize=(SIZE)(iPkt_size-1);//the given sizes are 1 based. convert to 0 based so they can be converted to our SIZE enum and used as array indeces for priority queue arrays
 		ss>>SR_size;		//get the number of nodes on it's routing list
-		
-		//LinkedList<Node*> packetRoutingQueue=LinkedList<Node*>();	//Source routing Queue of each packet
-		
+			
 		if(DEBUG) cout<<"\tSource Node ID "<<sourceID+1<<" arrived at time "<<arrival_time<<" and has "<<nPackets<<" packets of size "<<pktSize<<" to send through a rout of "<<SR_size<<" nodes."<<endl;
 				
 		//loop through nodeIDs of the routing list of each packet, adding them in reverse from the back of the array
@@ -148,10 +138,6 @@ int main(int argc, char* argv[]){
 		}
 		if(DEBUG) cout<<endl;
 		
-		
-		//TODO: get rid of self at head of queue?
-		//better for nodes to pop themselves off the queue and peak at the next node on the queue, or pop the next node off and lose the source by the end?
-		
 		//init each source node
 		if(DEBUG)cout<<"\tMaking Source Node "<<sourceID+1<<"..."<<endl;
 		sourceNodePtrs[sourceID]=new SourceNode(sourceID, arrival_time, nPackets, pktSize, sourceRoute, SR_size);	//note this uses the sourceID provided by the command line, NOT the one we're looping through. We trust the testing data
@@ -162,51 +148,54 @@ int main(int argc, char* argv[]){
 		
 	}
 	
+	//ensure the number of sources parsed from the file matches the number of sources given as a command line arg
 	if (senderIndexCheck!=nSources){
 		cout<<"ERROR: command line specified " << nSources << " sender nodes but file provided " << senderIndexCheck << "."<<endl;
 	}
 	
-	cout<<"\n\n\nStarting simulation at time " << simTime<<"."<<endl;
 	
-	bool anythingUpdated=true;
+	//MAIN SIMULATION LOOP
+	cout<<"\n\n\nStarting simulation at time " << simTime<<"."<<endl;
+	bool anythingUpdated=true;	//end the simulation when there's nothing left to update
 	while(anythingUpdated){
-		//if (DEBUG)cout<<"Sim Time " << simTime<<"."<<endl;
+		if (DEBUG)cout<<"SIM TIME " << simTime<<"."<<endl;
 
-		if (simTime%100==0) field.print();
-		
-		
-		
-		anythingUpdated=false;//reset every timestep
+		//print the field every 100 timesteps (each timestep is 100ms, so this is every 10 seconds)
+		if (simTime%100==0){
+			cout<<"\nPrinting field at t="<<simTime<<endl;
+			field.print();
+		}
+
+		//reset flag
+		anythingUpdated=false;	
 		
 		//loop through all nodes and update them
-		if (DEBUG)cout<<"SENDERS"<<endl;
+		if (DEBUG)cout<<"\tSENDERS"<<endl;
 		for (unsigned int sourceIndex=0;sourceIndex<nSources;sourceIndex++){
 			anythingUpdated|=sourceNodePtrs[sourceIndex]->update();
 		}
-		if (DEBUG)cout<<endl<<"MULES"<<endl;
+		if (DEBUG)cout<<endl<<"\tMULES"<<endl;
 		for (unsigned int muleIndex=0;muleIndex<nMules;muleIndex++){
 			anythingUpdated|=muleNodePtrs[muleIndex]->update();
 		}
-		if (DEBUG)cout<<endl<<"RECEIVERS"<<endl;
+		if (DEBUG)cout<<endl<<"\tRECEIVERS"<<endl;
 		for (unsigned int receiverIndex=0; receiverIndex<nReceivers; receiverIndex++){
 			anythingUpdated|=receiverNodePtrs[receiverIndex]->update();
 		}
 		
-		
-		//after every 10 seconds (100 100ms units) update the mule
+		//hope the mules after every 10 seconds (100 timestep units of 100ms each) 
 		if (simTime%100==0){
-			if (DEBUG)cout<<endl<<"HOPPING MULES at time "<<simTime<<endl<<endl;
+			if (DEBUG)cout<<endl<<"\tHOPPING MULES at time "<<simTime<<endl<<endl;
 			for (unsigned int muleIndex=0;muleIndex<nMules;muleIndex++){
 				anythingUpdated=true;
 				muleNodePtrs[muleIndex]->hop();
 			}
 		}
-		
-		
-		simTime++;//INCREMENT GLOBAL COUNT
+
+		simTime++;//INCREMENT GLOBAL SIMTIME
 	}
 
-	//testAll();
+	//simulation completion
 	cout<<"Done."<<endl;
 }
 
@@ -224,13 +213,13 @@ Node* getPtrOfNode(unsigned int index){
 	}
 }
 
-
+//test that a derived class overridden method will be correctly called in different circumstances
 void testNodePointerInheritence(){
 	cout<<endl<<"Testing Node inheritance."<<endl;
 	field.setSize(10);
 	Node* testNode = new MuleNode(8);
-	((MuleNode*)testNode)->print();
-	testNode->print();
+	((MuleNode*)testNode)->print();	//case base class to derived class - calls derived class overridden method
+	testNode->print();				//no casting - calls the base class method
 	cout<<"Done testing inheritance."<<endl<<endl;;
 }
 

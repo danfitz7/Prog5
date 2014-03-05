@@ -13,16 +13,16 @@ class Event{
 	friend ostream& operator<<(ostream& os, const Event* const eventPtr);
 	
 	private:
-		unsigned int time;
-		Packet* packetPtr;
-		EVENT_TYPE type;
+		unsigned int time;	//time the event occurs
+		Packet* packetPtr;	//associated packet
+		EVENT_TYPE type;	//type of event, either packet arrival or packet done transmitting (there is no packet done propagating because that is equivalent to arrival at the next node)
 		
 	public:
-		Event(unsigned int , Packet*, EVENT_TYPE);
+		Event(unsigned int , Packet*, EVENT_TYPE);	
 		unsigned int getTime(){return time;}
 		Packet* getPacket(){return packetPtr;}
 		EVENT_TYPE getType(){return type;}
-		bool operator<(Event other);
+		bool operator<(Event other);	//comparison so events can be sorted in prioritized queue (see LinkedList)
 };
 
 #endif

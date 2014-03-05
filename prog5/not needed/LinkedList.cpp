@@ -6,12 +6,9 @@
 #include "LinkedList.h"
 #include "ListNode.h"
 
-
 using namespace std;
-
 	
-	
-//NOTE: all this is commented and instead implemented inLinkedList.h
+//NOTE: all this is commented and instead implemented in LinkedList.h
 //This forces the compiler to implement this templated class for whatever types are necessary
 //May cause slower compilation times, but it avoids the need to explicitly instantiate this class for every type we want to use, which is buggy anyway
 	

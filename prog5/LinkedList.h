@@ -8,11 +8,7 @@
 //forward declare friended functions
 //template<data_t> ostream& operator<< <data_t>(ostream& os, const LinkedList<data_t>& LL);
 	
-
-	
-
-
-//LINKED LISTS can act as queues or sorted queues
+//LinkedLists is a wrapper class for ListNode, which are nodes in a sorted LinkedList which can act as queues
 template<class data_t> class LinkedList{
 	
 	//helper overridden stream insertion operator to print every item in a linked list
@@ -29,10 +25,9 @@ template<class data_t> class LinkedList{
 	}
 
 	private:
-		ListNode<data_t>* headNodePtr;
-		//listNode<data_t>* tailNodePtr;
-		unsigned int curLength;	//length of the queue right now
-		unsigned int longestLength; //record the max length of the queue so far
+		ListNode<data_t>* headNodePtr;	//pointer to the first ListNode of the list
+		unsigned int curLength;			//length of the queue right now
+		unsigned int longestLength; 	//the max length the queue has reached so far
 		
 	public:
 		LinkedList():
@@ -49,7 +44,6 @@ template<class data_t> class LinkedList{
 			curLength(other.curLength),
 			longestLength(other.longestLength)
 		{}*/
-		
 		
 		//returns the first item on the list but does NOT pop it off yet
 		data_t peek(){
@@ -68,6 +62,7 @@ template<class data_t> class LinkedList{
 			delete(headNodePtr);
 		}*/
 		
+		//returns the maximum number of elements this list has ever contained
 		int getLongestLength(){
 			return longestLength;
 		}
@@ -83,7 +78,6 @@ template<class data_t> class LinkedList{
 			}
 			cout<<"}"<<endl;
 		}
-		
 		
 		//push an item to the end of the list (FIFO/FCFS Queue)
 		void push(data_t data){

@@ -2,7 +2,6 @@
 
 #import "prog5.h"
 #include <iostream>
-
 #import "ListNode.h"
 
 //printing List Nodes just prints their data

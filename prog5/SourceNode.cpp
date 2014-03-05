@@ -1,5 +1,4 @@
 //Daniel Fitzgerald
-//Ethan Coeytaux
 
 #include "prog5.h"
 #include <iostream>
@@ -46,7 +45,7 @@ bool SourceNode::update(){
 }
 
 //start transmitting the next packet
-unsigned int SourceNode::nextPacketID=0;
+unsigned int SourceNode::nextPacketID=0;	//init static var
 void SourceNode::sendNextPacket(){
 	if (simTime>=arrivalTime){	//make sure we don't start sending packets before we arrive on the scene
 		if (DEBUG) cout << "\t\tSource "<<ID+1<< " making new packet "<<nextPacketID<<" to "<<SR[1]<<" at time "<<simTime<<"..."<<endl;
@@ -69,7 +68,7 @@ void SourceNode::sendNextPacket(){
 ostream& operator<<(ostream& os, const SourceNode& srcNode){
 	os<<"SOURCE NODE: "<<(Node)srcNode<<" arrival= "<<srcNode.arrivalTime<<" nPackets="<<srcNode.nPackets<<" pksSize="<<srcNode.pktSize<<" SR={";
 	for (unsigned int nodeIndex=0;nodeIndex< srcNode.SR_length; nodeIndex++){
-		os<<srcNode.SR[nodeIndex]<<", "; //
+		os<<srcNode.SR[nodeIndex]<<", ";
 	}
 	os<<"}";
 	return os;	

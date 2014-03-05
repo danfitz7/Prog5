@@ -8,10 +8,10 @@
 
 class MuleNode: public Node {
 	private:
-		Direction dir;
+		Direction dir;	//direction the mule is currently travelling in (see Position.h)
 	public:
 		MuleNode(unsigned int  newID);
-		void hop();
+		void hop();						//same hop behavior as SmashBall players
 		void print();
 };
 

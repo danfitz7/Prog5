@@ -8,10 +8,10 @@
 using namespace std;
 
 //forward declare LinkedList so we can use it as a friend class
-//#include "LinkedList.h" //apparently this doesn't work - glitch
+//#include "LinkedList.h" //apparently this doesn't work - bug
 template<class data_t> class LinkedList;
 
-//fundamental class for linked lists which function as Queues
+//ListNode is the fundamental class for linked lists which function as Queues
 template<class data_t> class ListNode{
 	friend class LinkedList<data_t>;
 		
@@ -28,8 +28,8 @@ template<class data_t> class ListNode{
 	}
 	
 	private:
-		data_t data;
-		ListNode<data_t>* nextPtr;
+		data_t data;				//data can be any fundamental type or object, as long as the < operator applies
+		ListNode<data_t>* nextPtr;	//pointer to the next ListNode in the list
 
 	public:
 		//main constructor

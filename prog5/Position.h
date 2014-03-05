@@ -3,9 +3,10 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-
+//direction of travel on the field (used by MuleNodes)
 enum Direction {EAST=0, SOUTH=1, WEST=2, NORTH=3};
 
+//defines a 2D position on the field, and converts between 2D coordinates and the index of the 1D array that is the internal implementation of the field.
 class Position{
 	friend ostream& operator<<(ostream& os, const Position& p){
 		os<<'('<<p.x<<','<<p.y<<')';
